@@ -1,3 +1,4 @@
+import 'package:circuit_spice/config/app_mode.dart';
 import 'package:circuit_spice/logic/interaction_controller.dart';
 import 'package:circuit_spice/models/electronic_component.dart';
 import 'package:circuit_spice/ui/context_toolbar.dart';

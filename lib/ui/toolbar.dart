@@ -7,9 +7,7 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 import '../ui/component_icon.dart';
 import '../models/resistor.dart';
-
-// Modalità del programma: selezione, posizionamento, ecc.
-enum AppMode { select, erase, placeResistor, placeVoltage, placeCurrent, drawWire, placeGround, placeLabelNet }
+import '../config/app_mode.dart';
 
 class WorkspaceToolbar extends StatelessWidget {
   final AppMode currentMode;

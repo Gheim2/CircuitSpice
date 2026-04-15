@@ -1,4 +1,5 @@
 // import 'package:circuit_spice/models/component_label.dart';
+import 'package:circuit_spice/config/app_mode.dart';
 import 'package:circuit_spice/models/current_source.dart';
 import 'package:circuit_spice/models/net_label.dart';
 import 'package:flutter/material.dart';
