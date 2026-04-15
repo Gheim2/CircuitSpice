@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 import 'package:circuit_spice/logic/engineering_utils.dart';
 import 'package:circuit_spice/models/electronic_component.dart';
-import 'package:circuit_spice/models/net_label.dart';
 import 'package:flutter/material.dart';
 
 class ComponentRenderer {

@@ -3,8 +3,10 @@ import 'electronic_component.dart';
 import 'node.dart';
 
 class VoltageSource extends ElectronicComponent {
-  VoltageSource({required super.position, super.value = 0.0, super.name = '', super.rotation});
+  VoltageSource({super.position = Offset.zero, super.value = 0.0, super.name = '', super.rotation});
 
+  @override
+  String get prefix => 'V';
   @override
   String get unit => 'V';
 
@@ -40,15 +42,5 @@ class VoltageSource extends ElectronicComponent {
       ..moveTo(0, -15)..lineTo(0, -5)
       ..moveTo(-5, 10)..lineTo(5, 10);
   }
-  // @override
-  // void drawSymbol(Canvas canvas, Paint paint) {
-  //   canvas.drawLine(const Offset(0, -40), const Offset(0, -20), paint);
-  //   canvas.drawLine(const Offset(0, 20), const Offset(0, 40), paint);
-  //   canvas.drawCircle(const Offset(0, 0), 20, paint);
-  //   // +
-  //   canvas.drawLine(const Offset(-5, -10), const Offset(5, -10), paint);
-  //   canvas.drawLine(const Offset(0, -15), const Offset(0, -5), paint);
-  //   // -
-  //   canvas.drawLine(const Offset(-5, 10), const Offset(5, 10), paint);
-  // }
+
 }

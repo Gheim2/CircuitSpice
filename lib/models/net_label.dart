@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class NetLabel extends ElectronicComponent{
   NetLabel({
-    required super.position,
+    super.position = Offset.zero,
     super.name = 'NET1',
     super.rotation = 0,
     super.showName = false,
@@ -12,6 +12,9 @@ class NetLabel extends ElectronicComponent{
   }) {
     labelsOffset = const Offset(30, 0);
   }
+
+  @override
+  String get prefix => 'NET';
 
   @override
   ElectronicComponent clone(Offset newPosition) {
@@ -34,7 +37,7 @@ class NetLabel extends ElectronicComponent{
   List<Offset> get relativeForbiddenPoints => [Offset(40, 0)];
 
   @override
-  Rect get baseCollisionRect => Rect.fromLTRB(3, -12, 62, 12);//Rect.fromCenter(center: const Offset(20, 0), width: 40, height: 20);
+  Rect get baseCollisionRect => Rect.fromLTRB(3, -12, 62, 12);
   
   @override
   Path get symbolPath {

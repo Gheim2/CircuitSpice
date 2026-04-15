@@ -4,7 +4,7 @@ import 'node.dart';
 
 class CurrentSource extends ElectronicComponent {
   CurrentSource({
-    required super.position,
+    super.position = Offset.zero,
     super.name,
     super.value = 1.0,
     super.rotation = 0,
@@ -16,6 +16,8 @@ class CurrentSource extends ElectronicComponent {
   @override
   LabelPosition get defaultLabelPosition => LabelPosition.left;
 
+  @override
+  String get prefix => 'I';
   @override
   String get unit => 'A';
 

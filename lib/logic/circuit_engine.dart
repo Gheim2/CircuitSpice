@@ -104,9 +104,11 @@ class CircuitEngine {
       if (kDebugMode) {
         print("Tensioni ai nodi:");
         nodeVoltages.forEach((netId, voltage) =>
+          // ignore: avoid_print
           print("Net $netId: ${voltage.toStringAsFixed(4)} V"));
         print("Correnti nelle sorgenti di tensione:");
         componentCurrents.forEach((comp, current) =>
+          // ignore: avoid_print
           print("${comp.name}: ${current.toStringAsFixed(4)} A"));
       }
     }

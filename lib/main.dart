@@ -8,6 +8,7 @@ import 'logic/circuit_manager.dart';
 import 'ui/widgets/toolbar.dart';
 import 'ui/circuit_painter.dart';
 import 'ui/dialogs.dart';
+import 'ui/widgets/placement_toolbar.dart';
 
 
 void main() {
@@ -145,6 +146,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
                     eraseCurrent: _controller.eraseCurrent,
                     tempWireStart: _controller.tempWireStart,
                     tempWireCurrent: _controller.tempWireCurrent,
+                    previewComponent: _controller.previewComponent,
                     repaintTrigger: _renderTrigger,
                   ),
                 ),
@@ -169,6 +171,18 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
                     },
                   ),
                 ),
+              if (_controller.previewComponent != null)
+                Positioned(
+                  left: _controller.previewComponent!.position.dx - 65,
+                  top: _controller.previewComponent!.position.dy - 80,
+                  child: SafeArea(
+                    child: PlacementToolbar(
+                      onConfirm: _controller.confirmPlacement,
+                      onCancel: _controller.cancelPlacement,
+                      onRotate: _controller.rotatePreview,
+                      ),
+                    ),
+                  ),
             ],
           )
         ),

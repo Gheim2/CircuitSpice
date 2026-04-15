@@ -58,6 +58,8 @@ class _ComponentIconPainter extends CustomPainter {
       ..strokeJoin = StrokeJoin.round
       ..strokeCap = StrokeCap.round;
 
+    component.showName = false;
+    component.showValue = false;
     // 4. Chiamiamo lo stesso identico metodo che usi per il circuito!
     ComponentRenderer.draw(canvas, component, compPaint: paint);
     // component.drawSymbol(canvas, paint);

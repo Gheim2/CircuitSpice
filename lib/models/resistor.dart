@@ -5,12 +5,14 @@ import 'node.dart';
 // Implementazione specifica della Resistenza
 class Resistor extends ElectronicComponent {
   Resistor({
-    required super.position,
+    super.position = Offset.zero,
     super.name = '',
     super.value = 0.0,
     super.rotation = 0
     });
 
+  @override
+  String get prefix => 'R';
   @override
   String get unit => 'Ω';
 

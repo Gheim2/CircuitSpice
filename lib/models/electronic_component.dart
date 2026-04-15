@@ -36,6 +36,7 @@ abstract class ElectronicComponent {
   bool get fillSymbolPath => false;
   Color get componentColor => isSelected ? Colors.orangeAccent : Colors.cyanAccent;
   LabelPosition get defaultLabelPosition => LabelPosition.top;
+  String get prefix => '';
   String get unit => ''; // Override nelle sottoclassi per unità specifiche
   bool get isValueEditable => true;
   double get currentArrowOffsetY => 25.0;

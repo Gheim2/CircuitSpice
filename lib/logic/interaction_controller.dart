@@ -8,7 +8,6 @@ import '../models/resistor.dart';
 import '../models/ground.dart';
 import '../models/v_source.dart';
 import 'circuit_manager.dart';
-import '../ui/widgets/toolbar.dart'; // Per l'enum AppMode
 import 'dart:math' as math;
 
 class InteractionController extends ChangeNotifier {
@@ -16,16 +15,18 @@ class InteractionController extends ChangeNotifier {
 
   // --- STATO DEL CONTROLLER ---
   AppMode currentMode = AppMode.select;
-  int _resCounter = 0;
-  int _vSourceCounter = 0;
-  int _cSourceCounter = 0;
-  int _labelCounter = 0;
+  final ValueNotifier<int> _resCounter = ValueNotifier<int>(0);
+  final ValueNotifier<int> _vSourceCounter = ValueNotifier<int>(0);
+  final ValueNotifier<int> _cSourceCounter = ValueNotifier<int>(0);
+  final ValueNotifier<int> _labelCounter = ValueNotifier<int>(0);
+  ValueNotifier<int>? _activePreviewCounter; // Per tenere traccia del contatore attivo durante il posizionamento
   DateTime? _downTime;
 
   // Variabili temporanee (Spostate dal Main a qui)
   ElectronicComponent? draggedComponent;
   ElectronicComponent? _draggedLabelComponent;
   ElectronicComponent? selectedComponent;
+  ElectronicComponent? previewComponent;
   Offset? originalPos;
   Offset? eraseStart;
   Offset? eraseCurrent;
@@ -43,6 +44,9 @@ class InteractionController extends ChangeNotifier {
   // Metodo per cambiare modalità dalla Toolbar
   void setMode(AppMode mode) {
     currentMode = mode;
+    selectedComponent?.isSelected = false; // Deseleziona il componente attualmente selezionato
+    selectedComponent = null;
+    previewComponent = null; // Resettiamo l'anteprima quando cambiamo strumento
     notifyListeners(); // Fondamentale per aggiornare le icone della toolbar
   }
 
@@ -59,13 +63,13 @@ class InteractionController extends ChangeNotifier {
 
     switch (currentMode) {
       case AppMode.select: _handleSelectDown(pos); break;
-      case AppMode.placeResistor: _handlePlaceResistor(pos); break;
+      case AppMode.placeResistor: _handlePlaceComponent(pos, Resistor(name: 'R${_resCounter.value + 1}', value: 1000), counter: _resCounter); break;
       case AppMode.drawWire: _handleDrawWireDown(pos); break;
       case AppMode.erase: _handleEraseDown(pos); break;
-      case AppMode.placeGround: _handlePlaceGround(pos); break;
-      case AppMode.placeVoltage: _handlePlaceVoltage(pos); break;
-      case AppMode.placeCurrent: _handlePlaceCurrent(pos); break;
-      case AppMode.placeLabelNet: _handlePlaceLabelNet(pos); break;
+      case AppMode.placeGround: _handlePlaceComponent(pos, Ground()); break;
+      case AppMode.placeVoltage: _handlePlaceComponent(pos, VoltageSource(name: 'V${_vSourceCounter.value + 1}', value: 5.0), counter: _vSourceCounter); break;
+      case AppMode.placeCurrent: _handlePlaceComponent(pos, CurrentSource(name: 'I${_cSourceCounter.value + 1}', value: 1.0), counter: _cSourceCounter); break;
+      case AppMode.placeLabelNet: _handlePlaceComponent(pos, NetLabel(), counter: _labelCounter); break;
       // default: break;
     }
     notifyListeners(); // Ridisegna per mostrare selezioni o anteprime
@@ -77,7 +81,11 @@ class InteractionController extends ChangeNotifier {
       case AppMode.select: _handleSelectMove(event.localDelta); break;
       case AppMode.drawWire: _handleDrawWireMove(pos); break;
       case AppMode.erase: _handleEraseMove(pos); break;
-      default: break;
+      default: // Per gli strumenti di posizionamento, aggiorniamo la posizione dell'anteprima
+        if (previewComponent != null) {
+          previewComponent!.position = manager.getSnappedPosition(pos);
+        }
+        break;
     }
     notifyListeners();
   }
@@ -90,6 +98,36 @@ class InteractionController extends ChangeNotifier {
       default: break;
     }
     notifyListeners();
+  }
+
+  // --- AZIONI DEL MENU DI ANTEPRIMA ---
+  void confirmPlacement() {
+    if (previewComponent != null) {
+      if (manager.addComponent(previewComponent!)) {
+        if (_activePreviewCounter != null) _activePreviewCounter!.value++;
+        final nextGhost = previewComponent!.clone(previewComponent!.position + Offset(40, 40));
+        if (_activePreviewCounter != null && nextGhost.prefix.isNotEmpty) {
+          nextGhost.name = '${nextGhost.prefix}${_activePreviewCounter!.value + 1}';
+        }
+        previewComponent = nextGhost;
+        notifyListeners();
+      }
+    }
+  }
+
+  void cancelPlacement() {
+    previewComponent = null;
+    _activePreviewCounter = null;
+    setMode(AppMode.select);
+    notifyListeners();
+  }
+
+  void rotatePreview() {
+    if (previewComponent != null) {
+      // Qui potresti voler passare più informazioni, come il tipo di componente, per mostrare un dialogo personalizzato
+      previewComponent!.rotation = (previewComponent!.rotation + 90) % 360;
+      notifyListeners();
+    }
   }
 
   // --- AZIONI DELLA CONTEXT TOOLBAR ---
@@ -118,6 +156,15 @@ class InteractionController extends ChangeNotifier {
   }
 
   // --- LOGICA PRIVATA DEI SINGOLI STRUMENTI ---
+
+  void _handlePlaceComponent(Offset pos, ElectronicComponent comp, {ValueNotifier<int>? counter}) {
+    final snappedPos = manager.getSnappedPosition(pos);
+    if (previewComponent == null) {
+      _activePreviewCounter = counter; // Salviamo quale contatore è attivo per questa anteprima
+      previewComponent = comp;
+    }
+    previewComponent!.position = snappedPos;
+  }
 
   void _handleSelectDown(Offset pos) {
     _draggedLabelComponent = null;
@@ -183,12 +230,6 @@ class InteractionController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _handlePlaceResistor(Offset pos) {
-    _resCounter++;
-    final res = Resistor(position: pos, name: 'R$_resCounter', value: 1000);
-    if (!manager.addComponent(res)) _resCounter--;
-  }
-
   void _handleDrawWireDown(Offset pos) {
     tempWireStart = manager.getSnappedPosition(pos);
     tempWireCurrent = tempWireStart;
@@ -243,31 +284,38 @@ class InteractionController extends ChangeNotifier {
     eraseCurrent = null;
   }
 
-  void _handlePlaceGround(Offset pos) {
-    final ground = Ground(position: pos);
-    manager.addComponent(ground);
-  }
+  
+  // void _handlePlaceResistor(Offset pos) {
+  //   _resCounter++;
+  //   final res = Resistor(position: pos, name: 'R$_resCounter', value: 1000);
+  //   if (!manager.addComponent(res)) _resCounter--;
+  // }
 
-  void _handlePlaceVoltage(Offset pos) {
-    _vSourceCounter++;
-    final vSource = VoltageSource(position: pos, value: 5, name: 'V$_vSourceCounter');
-    if (!manager.addComponent(vSource)) _vSourceCounter--;
-  }
+  // void _handlePlaceGround(Offset pos) {
+  //   final ground = Ground(position: pos);
+  //   manager.addComponent(ground);
+  // }
 
-  void _handlePlaceCurrent(Offset pos) {
-    _cSourceCounter++;
-    final cSource = CurrentSource(position: pos, value: 1.0, name: 'I$_cSourceCounter');
-    if (!manager.addComponent(cSource)) _cSourceCounter--;
-  }
+  // void _handlePlaceVoltage(Offset pos) {
+  //   _vSourceCounter++;
+  //   final vSource = VoltageSource(position: pos, value: 5, name: 'V$_vSourceCounter');
+  //   if (!manager.addComponent(vSource)) _vSourceCounter--;
+  // }
 
-  void _handlePlaceLabelNet(Offset pos) {
-    _labelCounter++;
-    final label = NetLabel(
-      position: pos,
-      name: 'NET$_labelCounter', // Genera nomi incrementali di default
-    );
-    if (!manager.addComponent(label)) _labelCounter--;
-  }
+  // void _handlePlaceCurrent(Offset pos) {
+  //   _cSourceCounter++;
+  //   final cSource = CurrentSource(position: pos, value: 1.0, name: 'I$_cSourceCounter');
+  //   if (!manager.addComponent(cSource)) _cSourceCounter--;
+  // }
+
+  // void _handlePlaceLabelNet(Offset pos) {
+  //   _labelCounter++;
+  //   final label = NetLabel(
+  //     position: pos,
+  //     name: 'NET$_labelCounter', // Genera nomi incrementali di default
+  //   );
+  //   if (!manager.addComponent(label)) _labelCounter--;
+  // }
 
 
 }

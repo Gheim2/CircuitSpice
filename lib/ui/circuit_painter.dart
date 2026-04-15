@@ -15,6 +15,8 @@ class CircuitPainter extends CustomPainter {
   final Offset? tempWireStart;
   final Offset? tempWireCurrent;
 
+  final ElectronicComponent? previewComponent;
+
   final ValueNotifier<int> repaintTrigger; 
 
   CircuitPainter({
@@ -26,6 +28,7 @@ class CircuitPainter extends CustomPainter {
     this.eraseCurrent,
     this.tempWireStart,
     this.tempWireCurrent, 
+    this.previewComponent,
     required this.repaintTrigger
   }) : super(repaint: repaintTrigger);
 
@@ -201,6 +204,19 @@ class CircuitPainter extends CustomPainter {
       canvas.drawLine(eraseStart!, eraseCurrent!, cutPaint);
       canvas.drawCircle(eraseStart!, 4, cutPaint..style = PaintingStyle.fill);
       canvas.drawCircle(eraseCurrent!, 4, cutPaint);
+    }
+
+    if (previewComponent != null) {
+      final ghostPaint = Paint()
+        ..color = previewComponent!.componentColor.withValues(alpha: 0.4)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.0
+        ..strokeJoin = StrokeJoin.round;
+      ComponentRenderer.draw(
+        canvas, 
+        previewComponent!, 
+        compPaint: ghostPaint,
+      );
     }
   }
     

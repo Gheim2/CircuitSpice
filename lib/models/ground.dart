@@ -3,7 +3,7 @@ import 'electronic_component.dart';
 import 'node.dart';
 
 class Ground extends ElectronicComponent {
-  Ground({required super.position}) : super(name: 'GND', value: 0, showName: false, showValue: false);
+  Ground({super.position = Offset.zero}) : super(name: 'GND', value: 0, showName: false, showValue: false);
 
   @override
   bool get isValueEditable => false;

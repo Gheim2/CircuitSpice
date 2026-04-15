@@ -1,11 +1,8 @@
 import 'package:circuit_spice/models/current_source.dart';
-import 'package:circuit_spice/models/electronic_component.dart';
 import 'package:circuit_spice/models/ground.dart';
 import 'package:circuit_spice/models/net_label.dart';
 import 'package:circuit_spice/models/v_source.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
-import '../component_icon.dart';
 import '../../models/resistor.dart';
 import '../../config/app_mode.dart';
 import 'widget_utilities.dart';
@@ -30,8 +27,8 @@ class WorkspaceToolbar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           buildBtn(Icons.ads_click, () => onModeChanged(AppMode.select), 'Select', isActive: _isActive(AppMode.select)),
-          buildBtn(Icons.delete, () => onModeChanged(AppMode.erase), 'Erase', activeColor: Colors.redAccent),
-          buildBtn(Icons.linear_scale, () => onModeChanged(AppMode.drawWire), 'Wire'),
+          buildBtn(Icons.delete, () => onModeChanged(AppMode.erase), 'Erase', activeColor: Colors.redAccent, isActive: _isActive(AppMode.erase)),
+          buildBtn(Icons.linear_scale, () => onModeChanged(AppMode.drawWire), 'Wire', isActive: _isActive(AppMode.drawWire)),
           buildCompBtn(Resistor(position: Offset.zero), () => onModeChanged(AppMode.placeResistor), 'Resistor', isActive: _isActive(AppMode.placeResistor)),
           buildCompBtn(VoltageSource(position: Offset.zero), () => onModeChanged(AppMode.placeVoltage), 'Voltage', isActive: _isActive(AppMode.placeVoltage)),
           buildCompBtn(CurrentSource(position: Offset.zero), () => onModeChanged(AppMode.placeCurrent), 'Current', isActive: _isActive(AppMode.placeCurrent)),
@@ -47,52 +44,5 @@ class WorkspaceToolbar extends StatelessWidget {
   }
 
   bool _isActive(AppMode mode) => currentMode == mode;
-
-  // Widget _buildCompBtn(
-  //   ElectronicComponent component, 
-  //   AppMode mode, String tooltip, 
-  //   {Color activeColor = Colors.orangeAccent,
-  //   double customScale = 1.0,
-  //   Offset iconOffset = Offset.zero,
-  //   }) 
-  //   {
-  //   final isActive = currentMode == mode;
-  //   return IconButton(
-  //     icon: ComponentIcon(
-  //       component: component, 
-  //       color: isActive ? activeColor : Colors.white,
-  //       customScale: customScale,
-  //       iconOffset: iconOffset,
-  //     ),
-  //     tooltip: tooltip,
-  //     onPressed: () => onModeChanged(mode),
-  //   );
-  // }
-
-  // Widget _buildBtn(IconData icon, AppMode mode, String tooltip, {Color activeColor = Colors.orangeAccent}) {
-  //   final isActive = currentMode == mode;
-  //   return IconButton(
-  //     icon: Icon(icon, color: isActive ? activeColor : Colors.white),
-  //     tooltip: tooltip,
-  //     onPressed: () => onModeChanged(mode),
-  //   );
-  // }
-
-  // // Widget _buildSvgBtn(String assetPath, AppMode mode, String tooltip) {
-  // //   final isActive = currentMode == mode;
-  // //   return IconButton(
-  // //     icon: SvgPicture.asset(
-  // //       assetPath, 
-  // //       width: 24, 
-  // //       height: 24, 
-  // //       colorFilter: ColorFilter.mode(
-  // //         isActive ? Colors.orangeAccent : Colors.white, 
-  // //         BlendMode.srcIn
-  // //       ),
-  // //     ),
-  // //     tooltip: tooltip,
-  // //     onPressed: () => onModeChanged(mode),
-  // //   );
-  // // }
 
 }
