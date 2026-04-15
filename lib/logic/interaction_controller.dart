@@ -284,38 +284,4 @@ class InteractionController extends ChangeNotifier {
     eraseCurrent = null;
   }
 
-  
-  // void _handlePlaceResistor(Offset pos) {
-  //   _resCounter++;
-  //   final res = Resistor(position: pos, name: 'R$_resCounter', value: 1000);
-  //   if (!manager.addComponent(res)) _resCounter--;
-  // }
-
-  // void _handlePlaceGround(Offset pos) {
-  //   final ground = Ground(position: pos);
-  //   manager.addComponent(ground);
-  // }
-
-  // void _handlePlaceVoltage(Offset pos) {
-  //   _vSourceCounter++;
-  //   final vSource = VoltageSource(position: pos, value: 5, name: 'V$_vSourceCounter');
-  //   if (!manager.addComponent(vSource)) _vSourceCounter--;
-  // }
-
-  // void _handlePlaceCurrent(Offset pos) {
-  //   _cSourceCounter++;
-  //   final cSource = CurrentSource(position: pos, value: 1.0, name: 'I$_cSourceCounter');
-  //   if (!manager.addComponent(cSource)) _cSourceCounter--;
-  // }
-
-  // void _handlePlaceLabelNet(Offset pos) {
-  //   _labelCounter++;
-  //   final label = NetLabel(
-  //     position: pos,
-  //     name: 'NET$_labelCounter', // Genera nomi incrementali di default
-  //   );
-  //   if (!manager.addComponent(label)) _labelCounter--;
-  // }
-
-
 }
