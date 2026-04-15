@@ -16,6 +16,11 @@ class CurrentSource extends ElectronicComponent {
   String get unit => 'A';
 
   @override
+  ElectronicComponent clone(Offset newPosition) {
+    return CurrentSource(position: newPosition, name: name, value: value, rotation: rotation);
+  }
+
+  @override
   List<ComponentNode> get nodes => [
     ComponentNode(const Offset(0, 40)),  // Nodo inferiore (pos)
     ComponentNode(const Offset(0, -40)), // Nodo superiore (neg)

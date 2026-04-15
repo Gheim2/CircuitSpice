@@ -65,36 +65,36 @@ class _ComponentEditFormState extends State<ComponentEditForm> {
             ),
           ],
         ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children:[
-            if (widget.component.isValueEditable) ...[
-              Expanded(
-                child: TextField(
-                controller: _valueController,
-                decoration: InputDecoration(labelText: 'Value', suffixText: widget.component.unit),
-                onChanged: (val) { 
-                  widget.component.value = EngineeringUtils.parseValue(val); 
-                  widget.onUpdate(); 
-                  },
+        if (widget.component.isValueEditable) ...[
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children:[
+                Expanded(
+                  child: TextField(
+                  controller: _valueController,
+                  decoration: InputDecoration(labelText: 'Value', suffixText: widget.component.unit),
+                  onChanged: (val) { 
+                    widget.component.value = EngineeringUtils.parseValue(val); 
+                    widget.onUpdate(); 
+                    },
+                  ),
                 ),
+              const SizedBox(width: 8,),
+              Column(
+                children: [
+                  const Text('Show Value', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                  Checkbox(
+                    value: widget.component.showValue,
+                    onChanged: (val) {
+                      setState(() => widget.component.showValue = val ?? true);
+                      widget.onUpdate();
+                    },
+                  ),
+                ],
               ),
-            ],
-            const SizedBox(width: 8,),
-            Column(
-              children: [
-                const Text('Show Value', style: TextStyle(fontSize: 10, color: Colors.grey)),
-                Checkbox(
-                  value: widget.component.showValue,
-                  onChanged: (val) {
-                    setState(() => widget.component.showValue = val ?? true);
-                    widget.onUpdate();
-                  },
-                ),
-              ],
-            ),
-          ]
-        )
+            ]
+          )
+        ],
       ]
     );
   }

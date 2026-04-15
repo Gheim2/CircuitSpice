@@ -4,7 +4,7 @@ import 'package:circuit_spice/models/ground.dart';
 import 'package:circuit_spice/models/net_label.dart';
 import 'package:circuit_spice/models/v_source.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 import '../ui/component_icon.dart';
 import '../models/resistor.dart';
 
@@ -37,7 +37,7 @@ class WorkspaceToolbar extends StatelessWidget {
           _buildCompBtn(VoltageSource(position: Offset.zero), AppMode.placeVoltage, 'Voltage'),
           _buildCompBtn(CurrentSource(position: Offset.zero), AppMode.placeCurrent, 'Current'),
           _buildCompBtn(Ground(position: Offset.zero), AppMode.placeGround, 'Ground', customScale: 1.8, iconOffset: Offset(0, -10)),
-          _buildCompBtn(NetLabel(position: Offset.zero), AppMode.placeLabelNet, 'Net Label'),
+          _buildCompBtn(NetLabel(position: Offset.zero), AppMode.placeLabelNet, 'Net Label', iconOffset: Offset(-35, 0)),
           IconButton(icon: const Icon(Icons.play_arrow_rounded, color: Colors.green),
             tooltip: 'Simulate',
             onPressed: onPlayPressed,
@@ -77,21 +77,21 @@ class WorkspaceToolbar extends StatelessWidget {
     );
   }
 
-  Widget _buildSvgBtn(String assetPath, AppMode mode, String tooltip) {
-    final isActive = currentMode == mode;
-    return IconButton(
-      icon: SvgPicture.asset(
-        assetPath, 
-        width: 24, 
-        height: 24, 
-        colorFilter: ColorFilter.mode(
-          isActive ? Colors.orangeAccent : Colors.white, 
-          BlendMode.srcIn
-        ),
-      ),
-      tooltip: tooltip,
-      onPressed: () => onModeChanged(mode),
-    );
-  }
+  // Widget _buildSvgBtn(String assetPath, AppMode mode, String tooltip) {
+  //   final isActive = currentMode == mode;
+  //   return IconButton(
+  //     icon: SvgPicture.asset(
+  //       assetPath, 
+  //       width: 24, 
+  //       height: 24, 
+  //       colorFilter: ColorFilter.mode(
+  //         isActive ? Colors.orangeAccent : Colors.white, 
+  //         BlendMode.srcIn
+  //       ),
+  //     ),
+  //     tooltip: tooltip,
+  //     onPressed: () => onModeChanged(mode),
+  //   );
+  // }
 
 }

@@ -15,6 +15,11 @@ class Resistor extends ElectronicComponent {
   String get unit => 'Ω';
 
   @override
+  ElectronicComponent clone(Offset newPosition) {
+    return Resistor(position: newPosition, name: name, value: value, rotation: rotation);
+  }
+
+  @override
   List<ComponentNode> get nodes => [
     ComponentNode(const Offset(-40, 0)), // Nodo di ingresso
     ComponentNode(const Offset(40, 0)),  // Nodo di uscita

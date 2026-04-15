@@ -9,6 +9,11 @@ class VoltageSource extends ElectronicComponent {
   String get unit => 'V';
 
   @override
+  ElectronicComponent clone(Offset newPosition) {
+    return VoltageSource(position: newPosition, value: value, name: name, rotation: rotation);
+  }
+
+  @override
   List<Offset> get relativeForbiddenPoints => [
     const Offset(0,0),
   ];

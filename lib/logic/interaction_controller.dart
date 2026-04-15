@@ -24,6 +24,7 @@ class InteractionController extends ChangeNotifier {
   // Variabili temporanee (Spostate dal Main a qui)
   ElectronicComponent? draggedComponent;
   ElectronicComponent? _draggedLabelComponent;
+  ElectronicComponent? selectedComponent;
   Offset? originalPos;
   Offset? eraseStart;
   Offset? eraseCurrent;
@@ -82,11 +83,36 @@ class InteractionController extends ChangeNotifier {
 
   void onPointerUp(PointerEvent event, Function(ElectronicComponent) onEdit) {
     switch (currentMode) {
-      case AppMode.select: _handleSelectUp(onEdit); break;
+      case AppMode.select: _handleSelectUp(); break;
       case AppMode.drawWire: _handleDrawWireUp(); break;
       case AppMode.erase: _handleEraseUp(); break;
       default: break;
     }
+    notifyListeners();
+  }
+
+  // --- AZIONI DELLA CONTEXT TOOLBAR ---
+  void copySelected() {
+    if (selectedComponent == null) return;
+    final clone = selectedComponent!.clone(selectedComponent!.position + const Offset(40,40));
+    if (manager.addComponent(clone)) {
+      selectedComponent!.isSelected = false;
+      selectedComponent = clone;
+      clone.isSelected = true;
+      notifyListeners();
+    }
+  }
+
+  void rotateSelected() {
+    if (selectedComponent == null) return;
+    manager.tryRotate(selectedComponent!);
+    notifyListeners();
+  }
+
+  void deleteSelected() {
+    if (selectedComponent == null) return;
+    manager.components.remove(selectedComponent);
+    selectedComponent = null;
     notifyListeners();
   }
 
@@ -104,10 +130,17 @@ class InteractionController extends ChangeNotifier {
     for (var c in manager.components.reversed) {
       if (c.contains(pos)) {
         draggedComponent = c;
+        if (selectedComponent != null) selectedComponent!.isSelected = false;
+        selectedComponent = c;
         c.isSelected = true;
         originalPos = c.position;
         return;
       }
+    }
+    // Se clicchiamo su uno spazio vuoto, deselezioniamo tutto
+    if (selectedComponent != null) {
+      selectedComponent!.isSelected = false;
+      selectedComponent = null;
     }
   }
 
@@ -125,7 +158,7 @@ class InteractionController extends ChangeNotifier {
     }
   }
 
-  void _handleSelectUp(Function(ElectronicComponent) onEdit) {
+  void _handleSelectUp() {
     // 1. Se stavamo trascinando un'etichetta, resettiamo e usciamo
     if (_draggedLabelComponent != null) {
       _draggedLabelComponent = null;
@@ -140,11 +173,10 @@ class InteractionController extends ChangeNotifier {
 
     if (duration.inMilliseconds < 250 && dist < 5) {
       draggedComponent!.position = originalPos!;
-      onEdit(draggedComponent!); // Chiamiamo il menu di modifica nel main
     } else {
       manager.finalizeMove(draggedComponent!, originalPos!);
     }
-    draggedComponent!.isSelected = false;
+
     draggedComponent = null;
     originalPos = null;
     notifyListeners();
@@ -235,4 +267,6 @@ class InteractionController extends ChangeNotifier {
     );
     if (!manager.addComponent(label)) _labelCounter--;
   }
+
+
 }

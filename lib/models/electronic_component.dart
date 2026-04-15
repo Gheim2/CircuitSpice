@@ -39,6 +39,8 @@ abstract class ElectronicComponent {
   bool get isValueEditable => true;
   double get currentArrowOffsetY => 25.0;
 
+  ElectronicComponent clone(Offset newPosition);
+
   Offset _getDefaultLabelsOffest() {
     switch (defaultLabelPosition) {
       case LabelPosition.top: return const Offset(0, -35);

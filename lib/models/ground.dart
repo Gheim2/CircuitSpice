@@ -9,6 +9,11 @@ class Ground extends ElectronicComponent {
   bool get isValueEditable => false;
 
   @override
+  ElectronicComponent clone(Offset newPosition) {
+    return Ground(position: newPosition);
+  }
+
+  @override
   List<Offset> get relativeForbiddenPoints => [
     const Offset(0,20),
   ];
