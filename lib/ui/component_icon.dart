@@ -1,3 +1,4 @@
+import 'package:circuit_spice/ui/renderers/component_renderer.dart';
 import 'package:flutter/material.dart';
 import '../models/electronic_component.dart';
 
@@ -58,7 +59,8 @@ class _ComponentIconPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     // 4. Chiamiamo lo stesso identico metodo che usi per il circuito!
-    component.drawSymbol(canvas, paint);
+    ComponentRenderer.draw(canvas, component, compPaint: paint);
+    // component.drawSymbol(canvas, paint);
   }
 
   @override

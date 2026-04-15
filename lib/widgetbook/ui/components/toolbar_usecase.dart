@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 import 'package:widgetbook/widgetbook.dart'; // Importante per usare i knobs
-import '../../../ui/toolbar.dart'; // Assicurati che il percorso sia corretto
+import '../../../ui/widgets/toolbar.dart'; // Assicurati che il percorso sia corretto
 import '../../../config/app_mode.dart';
 
 @widgetbook.UseCase(

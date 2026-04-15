@@ -8,7 +8,7 @@ import '../models/resistor.dart';
 import '../models/ground.dart';
 import '../models/v_source.dart';
 import 'circuit_manager.dart';
-import '../ui/toolbar.dart'; // Per l'enum AppMode
+import '../ui/widgets/toolbar.dart'; // Per l'enum AppMode
 import 'dart:math' as math;
 
 class InteractionController extends ChangeNotifier {

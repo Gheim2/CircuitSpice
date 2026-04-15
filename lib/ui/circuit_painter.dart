@@ -2,28 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import '../models/electronic_component.dart';
 import '../models/wire.dart';
+import 'renderers/component_renderer.dart'; // IMPORTANTE: Importa il renderer!
 
 class CircuitPainter extends CustomPainter {
   final List<ElectronicComponent> components;
   final List<Wire> wires;
+  final Map<int, double> nodeVoltages; // Mappa netId -> tensione
+  final Map<ElectronicComponent, double> componentCurrents; // Mappa componente -> corrente
+  
   final Offset? eraseStart;
   final Offset? eraseCurrent;
   final Offset? tempWireStart;
   final Offset? tempWireCurrent;
-  final Map<int, double> nodeVoltages; // Mappa netId -> tensione
-  final Map<ElectronicComponent, double> componentCurrents; // Mappa componente -> corrente
+
+  final ValueNotifier<int> repaintTrigger; 
 
   CircuitPainter({
     required this.components,
     required this.wires,
-    this.nodeVoltages = const {}, // Inizializza con mappa vuota
-    this.componentCurrents = const {}, // Inizializza con mappa vuota
+    this.nodeVoltages = const {}, 
+    this.componentCurrents = const {}, 
     this.eraseStart,
     this.eraseCurrent,
     this.tempWireStart,
     this.tempWireCurrent, 
-    required Listenable repaintTrigger
-    }) : super(repaint: repaintTrigger);
+    required this.repaintTrigger
+  }) : super(repaint: repaintTrigger);
 
   Color _getNetColor(int netId) {
     if (netId < 0) return Colors.greenAccent; // Filo non connesso
@@ -37,7 +41,7 @@ class CircuitPainter extends CustomPainter {
     _drawGrid(canvas, size);
     Set<int> drawnLabelNets = {}; // Tiene traccia dei netId già etichettati
     _drawWires(canvas, drawnLabelNets);
-    _drawComponents(canvas, drawnLabelNets);
+    _drawComponents(canvas, drawnLabelNets); // Ora usiamo la versione riattivata
     _drawPreview(canvas);
   }
   
@@ -58,17 +62,19 @@ class CircuitPainter extends CustomPainter {
 
   void _drawWires(Canvas canvas, Set<int> drawnLabelNets) {
     Map<int, Wire> longestWirePerNet = {};
-    final wirePaint = Paint()
-      ..color = Colors.greenAccent
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0
-      ..strokeCap = StrokeCap.round;
 
     for (var wire in wires) {
       final netColor = _getNetColor(wire.netId);
-      // final netPaint = wirePaint..color = netColor;
-      final netPaint = Paint.from(wirePaint)..color = netColor;
+      
+      // Creiamo il paint specifico per questo filo
+      final netPaint = Paint()
+        ..color = netColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.0
+        ..strokeCap = StrokeCap.round;
+        
       wire.draw(canvas, netPaint);
+      
       if (wire.netId != -1) {
         double currentLength = (wire.end - wire.start).distance;
         if (!longestWirePerNet.containsKey(wire.netId)) {
@@ -83,6 +89,7 @@ class CircuitPainter extends CustomPainter {
         drawnLabelNets.add(wire.netId);
       }
     }
+    
     longestWirePerNet.forEach((netId, bestWire) {
       final midPoint = Offset(
         (bestWire.start.dx + bestWire.end.dx) / 2,
@@ -95,11 +102,11 @@ class CircuitPainter extends CustomPainter {
       final textPainter = TextPainter(
         text: TextSpan(
           text: label,
-          style: TextStyle(color: _getNetColor(netId), fontSize: 12, fontWeight: FontWeight.bold, shadows: [
+          style: TextStyle(color: _getNetColor(netId), fontSize: 12, fontWeight: FontWeight.bold, shadows: const [
             Shadow(
               blurRadius: 3.0,
               color: Colors.black87,
-              offset: const Offset(1, 1),
+              offset: Offset(1, 1),
             ),
           ]),
         ),
@@ -109,20 +116,20 @@ class CircuitPainter extends CustomPainter {
       textPainter.layout();
       textPainter.paint(canvas, midPoint - Offset(textPainter.width / 2, textPainter.height / 2));
     });
+    
     // DISEGNO FILO (Mentre l'utente trascina)
     if (tempWireStart != null && tempWireCurrent != null) {
-      canvas.drawLine(tempWireStart!, tempWireCurrent!, wirePaint);
+      final tempPaint = Paint()
+        ..color = Colors.greenAccent
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.0
+        ..strokeCap = StrokeCap.round;
+      canvas.drawLine(tempWireStart!, tempWireCurrent!, tempPaint);
     }
   }
 
   void _drawComponents(Canvas canvas, Set<int> drawnLabelNets) {
-    final paint = Paint()
-      ..color = Colors.cyanAccent
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0
-      ..strokeJoin = StrokeJoin.round;
-
-    // DEBUG COLLISIONI
+    // DEBUG COLLISIONI (mantenuto dalla tua versione)
     if (kDebugMode) {
       final debugPaint = Paint()
         ..color = Colors.red.withValues(alpha: 0.3)
@@ -131,8 +138,15 @@ class CircuitPainter extends CustomPainter {
         canvas.drawRect(component.collisionBox, debugPaint);
       }
     }
+
     for (var comp in components) {
-      comp.draw(canvas, paint, current: componentCurrents[comp]);
+      // 1. DELEGAZIONE: Disegniamo la grafica del componente tramite il nuovo Renderer
+      ComponentRenderer.draw(
+        canvas, 
+        comp, 
+      );
+
+      // 2. LOGICA NODI: Sovrascriviamo i pin con i colori delle tue Net
       var positions = comp.globalNodePositions;
       for (int i = 0; i < positions.length; i++) {
         int? netId = comp.pinNets[i];
@@ -143,6 +157,7 @@ class CircuitPainter extends CustomPainter {
           // Disegna un pallino colorato sopra il nodo
           canvas.drawCircle(positions[i], 5.0, nodePaint); 
 
+          // 3. LOGICA ETICHETTE MANCANTI: Se non c'era un filo per questa net, mettiamo il testo
           if(!drawnLabelNets.contains(netId)) {
             String label = (netId == 0) ? 'GND' : 'Net $netId';
             if (nodeVoltages.containsKey(netId)) {
@@ -151,11 +166,11 @@ class CircuitPainter extends CustomPainter {
             final textPainter = TextPainter(
               text: TextSpan(
                 text: label,
-                style: TextStyle(color: _getNetColor(netId), fontSize: 12, fontWeight: FontWeight.bold, shadows: [
+                style: TextStyle(color: _getNetColor(netId), fontSize: 12, fontWeight: FontWeight.bold, shadows: const [
                   Shadow(
                     blurRadius: 3.0,
                     color: Colors.black87,
-                    offset: const Offset(1, 1),
+                    offset: Offset(1, 1),
                   ),
                 ]),
               ),
@@ -166,6 +181,12 @@ class CircuitPainter extends CustomPainter {
             textPainter.paint(canvas, positions[i] - Offset(textPainter.width / 2, textPainter.height + 8));
           }
         }
+      }
+    }
+    for (var comp in components) {
+      final current = componentCurrents[comp];
+      if (current != null) {
+        ComponentRenderer.drawCurrentArrow(canvas, comp, current);
       }
     }
   }
@@ -186,4 +207,3 @@ class CircuitPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
-

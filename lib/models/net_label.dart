@@ -19,6 +19,9 @@ class NetLabel extends ElectronicComponent{
   }
 
   @override
+  bool get fillSymbolPath => true;
+
+  @override
   bool get isValueEditable => false;
 
   @override
@@ -34,31 +37,28 @@ class NetLabel extends ElectronicComponent{
   Rect get baseCollisionRect => Rect.fromLTRB(3, -12, 62, 12);//Rect.fromCenter(center: const Offset(20, 0), width: 40, height: 20);
   
   @override
-  void drawSymbol(Canvas canvas, Paint paint) {
-    canvas.drawLine(Offset.zero, const Offset(15, 0), paint);
-    
-    // Disegniamo una piccola "bandierina" o tag
-    final path = Path()
-      ..moveTo(10, 0)
-      ..lineTo(15, -10)
-      ..lineTo(60, -10)
-      ..lineTo(60, 10)
-      ..lineTo(15, 10)
-      ..close(); 
-      
-    canvas.drawPath(path, paint..style = PaintingStyle.fill);
+  Path get symbolPath {
+    return Path()
+      ..moveTo(10,0)
+      ..lineTo(15, -10)..lineTo(60, -10)..lineTo(60, 10)..lineTo(15, 10)..close();
+  }
 
-    // Disegniamo il testo del nome
+  @override
+  void drawInnerSymbol(Canvas canvas, Paint paint) {
+    // 1. Disegniamo la linea di attacco (la teniamo fuori dal Path principale per non riempirla)
+    canvas.drawLine(Offset.zero, const Offset(15, 0), paint);
+
+    // 2. Disegniamo il testo del nome DENTRO il componente
     if (name.isNotEmpty) {
-      final textPainter = TextPainter(
-        text: TextSpan(text: name, style: const TextStyle(color: Colors.white, fontSize: 10)),
+      Color textColor = paint.color == Colors.white ? Colors.black : Colors.white;
+      final tp = TextPainter(
+        text: TextSpan(
+          text: name,
+          style: TextStyle(color: textColor, fontSize: 12, fontWeight: FontWeight.bold, height: 1.0),
+        ),
         textDirection: TextDirection.ltr,
-        textAlign: TextAlign.left,
       )..layout();
-      
-      double textX = 20;
-      double textY = - (textPainter.height / 2);
-      textPainter.paint(canvas, Offset(textX, textY));
+      tp.paint(canvas, Offset(15 + (45 - tp.width) / 2, -tp.height / 2));
     }
   }
 

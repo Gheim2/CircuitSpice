@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'widget_utilities.dart';
 
 class ContextToolbar extends StatelessWidget {
   final VoidCallback onEdit;
@@ -25,23 +26,23 @@ class ContextToolbar extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildBtn(Icons.edit, onEdit, "Edit"),
-            _buildBtn(Icons.copy, onCopy, "Copy"),
-            _buildBtn(Icons.rotate_right, onRotate, "Rotate"),
-            _buildBtn(Icons.delete, onDelete, "Delete"),
+            buildBtn(Icons.edit, onEdit, "Edit"),
+            buildBtn(Icons.copy, onCopy, "Copy"),
+            buildBtn(Icons.rotate_right, onRotate, "Rotate"),
+            buildBtn(Icons.delete, onDelete, "Delete"),
           ],
         )
       ),
     );
   }
 
-  Widget _buildBtn(IconData icon, VoidCallback callback, String tooltip) {
-    return IconButton(
-      icon: Icon(icon, color: Colors.white),
-      tooltip: tooltip,
-      onPressed: callback,
-    );
-  }
+  // Widget _buildBtn(IconData icon, VoidCallback callback, String tooltip) {
+  //   return IconButton(
+  //     icon: Icon(icon, color: Colors.white),
+  //     tooltip: tooltip,
+  //     onPressed: callback,
+  //   );
+  // }
 
   // Widget _buildCompBtn(
   //   ElectronicComponent component, 

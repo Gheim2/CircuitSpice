@@ -27,11 +27,12 @@ class Ground extends ElectronicComponent {
   Rect get baseCollisionRect => Rect.fromCenter(center: Offset(0, 10), width: 30, height: 25);
 
   @override
-  void drawSymbol(Canvas canvas, Paint paint) {
-    canvas.drawLine(const Offset(0, 0), const Offset(0, 10), paint);
-    canvas.drawLine(const Offset(-15, 10), const Offset(15, 10), paint);
-    canvas.drawLine(const Offset(-10, 16), const Offset(10, 16), paint);
-    canvas.drawLine(const Offset(-5, 22), const Offset(5, 22), paint);
+  Path get symbolPath {
+    return Path()
+      ..moveTo(0, 0)..lineTo(0, 10)
+      ..moveTo(-15, 10)..lineTo(15, 10)
+      ..moveTo(-10, 16)..lineTo(10, 16)
+      ..moveTo(-5, 22)..lineTo(5, 22);
   }
   
 }

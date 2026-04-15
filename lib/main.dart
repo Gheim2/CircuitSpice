@@ -1,11 +1,11 @@
 import 'package:circuit_spice/config/app_mode.dart';
 import 'package:circuit_spice/logic/interaction_controller.dart';
 import 'package:circuit_spice/models/electronic_component.dart';
-import 'package:circuit_spice/ui/context_toolbar.dart';
+import 'package:circuit_spice/ui/widgets/context_toolbar.dart';
 import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 import 'logic/circuit_manager.dart';
-import 'ui/toolbar.dart';
+import 'ui/widgets/toolbar.dart';
 import 'ui/circuit_painter.dart';
 import 'ui/dialogs.dart';
 

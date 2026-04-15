@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
-import '../../../ui/context_toolbar.dart';
+import '../../../ui/widgets/context_toolbar.dart';
 
 @widgetbook.UseCase(
   name: 'Standard Toolbar',
