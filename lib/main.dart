@@ -83,6 +83,13 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     );
   }
   
+  Offset _getCanvasCenter() {
+    final screenSize = MediaQuery.of(context).size;
+    final screenCenter = Offset(screenSize.width / 2, screenSize.height /2);
+    final Matrix4 inverseMatrix = Matrix4.inverted(_camController.value);
+    return MatrixUtils.transformPoint(inverseMatrix, screenCenter);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -116,7 +123,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     return Scaffold(
       bottomNavigationBar: WorkspaceToolbar(
         currentMode: _controller.currentMode,
-        onModeChanged: (mode) => setState(() => _controller.setMode(mode)),
+        onModeChanged: (mode) => setState(() => _controller.setMode(mode, spawnPos: _getCanvasCenter())),
         onPlayPressed: () => _controller.runNetlistener(),
       ),
       body: InteractiveViewer(
@@ -142,7 +149,6 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
                     wires: _manager.wires,
                     nodeVoltages: _manager.engine?.nodeVoltages ?? {}, // Passa le tensioni dei nodi al painter
                     componentCurrents: _manager.engine?.componentCurrents ?? {}, // Passa le correnti dei componenti al painter
-                    eraseStart: _controller.eraseStart,
                     eraseCurrent: _controller.eraseCurrent,
                     tempWireStart: _controller.tempWireStart,
                     tempWireCurrent: _controller.tempWireCurrent,

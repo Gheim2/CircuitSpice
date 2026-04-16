@@ -22,13 +22,12 @@ class InteractionController extends ChangeNotifier {
   ValueNotifier<int>? _activePreviewCounter; // Per tenere traccia del contatore attivo durante il posizionamento
   DateTime? _downTime;
 
-  // Variabili temporanee (Spostate dal Main a qui)
+  // Variabili temporanee
   ElectronicComponent? draggedComponent;
   ElectronicComponent? _draggedLabelComponent;
   ElectronicComponent? selectedComponent;
   ElectronicComponent? previewComponent;
   Offset? originalPos;
-  Offset? eraseStart;
   Offset? eraseCurrent;
   Offset? tempWireStart;
   Offset? tempWireCurrent;
@@ -39,14 +38,17 @@ class InteractionController extends ChangeNotifier {
     draggedComponent != null ||
     _draggedLabelComponent != null ||
     tempWireStart != null ||
-    eraseStart != null;
+    eraseCurrent != null ||
+    previewComponent != null;
 
   // Metodo per cambiare modalità dalla Toolbar
-  void setMode(AppMode mode) {
+  void setMode(AppMode mode, {Offset? spawnPos}) {
     currentMode = mode;
     selectedComponent?.isSelected = false; // Deseleziona il componente attualmente selezionato
     selectedComponent = null;
-    previewComponent = null; // Resettiamo l'anteprima quando cambiamo strumento
+    previewComponent = null;
+    _activePreviewCounter = null;
+    _initPreviewForMode(mode, spawnPos: spawnPos);
     notifyListeners(); // Fondamentale per aggiornare le icone della toolbar
   }
 
@@ -60,37 +62,49 @@ class InteractionController extends ChangeNotifier {
   void onPointerDown(PointerDownEvent event) {
     _downTime = DateTime.now();
     final pos = event.localPosition;
+    if (previewComponent != null) {
+      originalPos = previewComponent!.position;
+      previewComponent!.position = manager.getSnappedPosition(pos);
+      notifyListeners();
+      return; 
+    }
 
     switch (currentMode) {
       case AppMode.select: _handleSelectDown(pos); break;
-      case AppMode.placeResistor: _handlePlaceComponent(pos, Resistor(name: 'R${_resCounter.value + 1}', value: 1000), counter: _resCounter); break;
       case AppMode.drawWire: _handleDrawWireDown(pos); break;
       case AppMode.erase: _handleEraseDown(pos); break;
-      case AppMode.placeGround: _handlePlaceComponent(pos, Ground()); break;
-      case AppMode.placeVoltage: _handlePlaceComponent(pos, VoltageSource(name: 'V${_vSourceCounter.value + 1}', value: 5.0), counter: _vSourceCounter); break;
-      case AppMode.placeCurrent: _handlePlaceComponent(pos, CurrentSource(name: 'I${_cSourceCounter.value + 1}', value: 1.0), counter: _cSourceCounter); break;
-      case AppMode.placeLabelNet: _handlePlaceComponent(pos, NetLabel(), counter: _labelCounter); break;
-      // default: break;
+      default: break;
     }
-    notifyListeners(); // Ridisegna per mostrare selezioni o anteprime
+    notifyListeners();
   }
 
   void onPointerMove(PointerMoveEvent event) {
     final pos = event.localPosition;
+    if (previewComponent != null) {
+      previewComponent!.position = manager.getSnappedPosition(pos);
+      notifyListeners();
+      return;
+    }
     switch (currentMode) {
       case AppMode.select: _handleSelectMove(event.localDelta); break;
       case AppMode.drawWire: _handleDrawWireMove(pos); break;
       case AppMode.erase: _handleEraseMove(pos); break;
-      default: // Per gli strumenti di posizionamento, aggiorniamo la posizione dell'anteprima
-        if (previewComponent != null) {
-          previewComponent!.position = manager.getSnappedPosition(pos);
-        }
-        break;
+      default: break;
     }
     notifyListeners();
   }
 
   void onPointerUp(PointerEvent event, Function(ElectronicComponent) onEdit) {
+    final pos = event.localPosition;
+    final duration = DateTime.now().difference(_downTime!);
+    final dist = originalPos != null ? (pos - originalPos!).distance : 0.0;
+    if (previewComponent != null) {
+      if (duration.inMilliseconds < 250 && dist < 30.0 && previewComponent!.contains(pos)) {
+        confirmPlacement();
+        originalPos = null;
+      }
+      return;
+    }
     switch (currentMode) {
       case AppMode.select: _handleSelectUp(); break;
       case AppMode.drawWire: _handleDrawWireUp(); break;
@@ -101,6 +115,53 @@ class InteractionController extends ChangeNotifier {
   }
 
   // --- AZIONI DEL MENU DI ANTEPRIMA ---
+
+  void _initPreviewForMode(AppMode mode, {Offset? spawnPos}) {
+    switch (mode) {
+      case AppMode.placeResistor:
+        previewComponent = Resistor(name: 'R${_resCounter.value + 1}', value: 1000);
+        _activePreviewCounter = _resCounter;
+        break;
+      case AppMode.placeGround:
+        previewComponent = Ground();
+        _activePreviewCounter = null;
+        break;
+      case AppMode.placeVoltage:
+        previewComponent = VoltageSource(name: 'V${_vSourceCounter.value + 1}', value: 5.0);
+        _activePreviewCounter = _vSourceCounter;
+        break;
+      case AppMode.placeCurrent:
+        previewComponent = CurrentSource(name: 'I${_cSourceCounter.value + 1}', value: 1.0);
+        _activePreviewCounter = _cSourceCounter;
+        break;
+      case AppMode.placeLabelNet:
+        previewComponent = NetLabel();
+        _activePreviewCounter = _labelCounter;
+        break;
+      default:
+        break;
+    }
+    if (previewComponent != null) {
+      spawnPos ??= Offset.zero;
+      _handlePlaceComponent(spawnPos, previewComponent!, counter: _activePreviewCounter);
+    }
+  }
+
+  void _initPreviewForComponent(ElectronicComponent comp, {Offset? spawnPos}) {
+    switch (comp) {
+      case Resistor(): _activePreviewCounter = _resCounter; break;
+      case VoltageSource(): _activePreviewCounter = _vSourceCounter; break;
+      case CurrentSource(): _activePreviewCounter = _cSourceCounter; break;
+      case NetLabel(): _activePreviewCounter = _labelCounter; break;
+      default: break;
+    }
+    if (_activePreviewCounter != null && comp.prefix.isNotEmpty) {
+      comp.name = "${comp.prefix}${_activePreviewCounter!.value + 1}";
+    }
+    spawnPos ??= Offset.zero;
+    _handlePlaceComponent(spawnPos, comp, counter: _activePreviewCounter);
+  }
+
   void confirmPlacement() {
     if (previewComponent != null) {
       if (manager.addComponent(previewComponent!)) {
@@ -130,16 +191,17 @@ class InteractionController extends ChangeNotifier {
     }
   }
 
-  // --- AZIONI DELLA CONTEXT TOOLBAR ---
+  // --- CONTEXT TOOLBAR ---
+
   void copySelected() {
     if (selectedComponent == null) return;
+    
     final clone = selectedComponent!.clone(selectedComponent!.position + const Offset(40,40));
-    if (manager.addComponent(clone)) {
-      selectedComponent!.isSelected = false;
-      selectedComponent = clone;
-      clone.isSelected = true;
-      notifyListeners();
-    }
+    selectedComponent!.isSelected = false;
+    selectedComponent = null; 
+
+    _initPreviewForComponent(clone, spawnPos: clone.position);
+    notifyListeners();
   }
 
   void rotateSelected() {
@@ -259,29 +321,14 @@ class InteractionController extends ChangeNotifier {
     }
   }
 
-  void _handleEraseDown(Offset pos) {
-    eraseStart = pos;
-    eraseCurrent = pos;
-  }
+  void _handleEraseDown(Offset pos) {eraseCurrent = pos;}
 
   void _handleEraseMove(Offset pos) {
-    if (eraseStart != null) {
-      eraseCurrent = pos;
-    }
+    eraseCurrent = pos;
+    manager.components.removeWhere((c) => c.contains(eraseCurrent!));
+    manager.wires.removeWhere((w) => w.contains(eraseCurrent!));
   }
 
-  void _handleEraseUp() {
-    if (eraseStart == null || eraseCurrent == null) return;
-    final dist = (eraseStart! - eraseCurrent!).distance;
-    final duration = DateTime.now().difference(_downTime!);
-    if (duration.inMilliseconds < 250 && dist < 10) {
-      manager.components.removeWhere((c) => c.contains(eraseStart!));
-      manager.wires.removeWhere((w) => w.contains(eraseStart!));
-    } else {
-      manager.eraseIntersecting(eraseStart!, eraseCurrent!);
-    }
-    eraseStart = null;
-    eraseCurrent = null;
-  }
+  void _handleEraseUp() {eraseCurrent = null;}
 
 }

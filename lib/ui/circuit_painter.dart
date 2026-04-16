@@ -10,7 +10,7 @@ class CircuitPainter extends CustomPainter {
   final Map<int, double> nodeVoltages; // Mappa netId -> tensione
   final Map<ElectronicComponent, double> componentCurrents; // Mappa componente -> corrente
   
-  final Offset? eraseStart;
+  // final Offset? eraseStart;
   final Offset? eraseCurrent;
   final Offset? tempWireStart;
   final Offset? tempWireCurrent;
@@ -24,7 +24,6 @@ class CircuitPainter extends CustomPainter {
     required this.wires,
     this.nodeVoltages = const {}, 
     this.componentCurrents = const {}, 
-    this.eraseStart,
     this.eraseCurrent,
     this.tempWireStart,
     this.tempWireCurrent, 
@@ -195,23 +194,21 @@ class CircuitPainter extends CustomPainter {
   }
     
   void _drawPreview(Canvas canvas) {
-    if (eraseStart != null && eraseCurrent != null) {
+    if (eraseCurrent != null) {
       final cutPaint = Paint()
         ..color = Colors.red.withValues(alpha: 0.5)
         ..strokeWidth = 2.0
         ..style = PaintingStyle.stroke;
-        
-      canvas.drawLine(eraseStart!, eraseCurrent!, cutPaint);
-      canvas.drawCircle(eraseStart!, 4, cutPaint..style = PaintingStyle.fill);
-      canvas.drawCircle(eraseCurrent!, 4, cutPaint);
+      canvas.drawCircle(eraseCurrent!, 6, cutPaint..style = PaintingStyle.fill);
     }
 
     if (previewComponent != null) {
       final ghostPaint = Paint()
-        ..color = previewComponent!.componentColor.withValues(alpha: 0.4)
+        ..color = previewComponent!.componentColor.withValues(alpha: 0.4, green: 2.0)
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.0
-        ..strokeJoin = StrokeJoin.round;
+        ..strokeWidth = 3.0
+        ..strokeJoin = StrokeJoin.round
+        ..blendMode = BlendMode.plus;
       ComponentRenderer.draw(
         canvas, 
         previewComponent!, 
