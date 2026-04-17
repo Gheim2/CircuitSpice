@@ -1,6 +1,7 @@
 import 'package:circuit_spice/models/electronic_component.dart';
-import 'package:circuit_spice/ui/component_icon.dart';
+import 'package:circuit_spice/ui/widgets/component_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 // Da importare per disegnare le toolbar
 
 Widget buildCompBtn(
@@ -32,18 +33,19 @@ Widget buildCompBtn(
     );
   }
 
-  // Widget _buildSvgBtn(String assetPath, VoidCallback callback, String tooltip, {Color activeColor = Colors.orangeAccent, bool isActive = false}) {
-  //   return IconButton(
-  //     icon: SvgPicture.asset(
-  //       assetPath, 
-  //       width: 24, 
-  //       height: 24, 
-  //       colorFilter: ColorFilter.mode(
-  //         isActive ? activeColor : Colors.white, 
-  //         BlendMode.srcIn
-  //       ),
-  //     ),
-  //     tooltip: tooltip,
-  //     onPressed: callback,
-  //   );
-  // }
+  // ignore: unused_element
+  Widget _buildSvgBtn(String assetPath, VoidCallback callback, String tooltip, {Color activeColor = Colors.orangeAccent, bool isActive = false}) {
+    return IconButton(
+      icon: SvgPicture.asset(
+        assetPath, 
+        width: 24, 
+        height: 24, 
+        colorFilter: ColorFilter.mode(
+          isActive ? activeColor : Colors.white, 
+          BlendMode.srcIn
+        ),
+      ),
+      tooltip: tooltip,
+      onPressed: callback,
+    );
+  }

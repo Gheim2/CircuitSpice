@@ -1,8 +1,10 @@
+import 'package:circuit_spice/ui/renderers/grid_renderer.dart';
+import 'package:circuit_spice/ui/renderers/wire_renderer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import '../models/electronic_component.dart';
 import '../models/wire.dart';
-import 'renderers/component_renderer.dart'; // IMPORTANTE: Importa il renderer!
+import 'renderers/component_renderer.dart';
 
 class CircuitPainter extends CustomPainter {
   final List<ElectronicComponent> components;
@@ -48,90 +50,19 @@ class CircuitPainter extends CustomPainter {
   }
   
   void _drawGrid(Canvas canvas, Size size) {
-    final gridPaint = Paint()
-      ..color = Colors.grey.withValues(alpha: 0.2)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0;
-
     const double spacing = 40.0;
-    for (double i = 0; i <= size.width; i += spacing) {
-      canvas.drawLine(Offset(i, 0), Offset(i, size.height), gridPaint);
-    }
-    for (double i = 0; i <= size.height; i += spacing) {
-      canvas.drawLine(Offset(0, i), Offset(size.width, i), gridPaint);
-    }
+    GridRenderer.draw(canvas, size, spacing, color: Colors.grey.withValues(alpha: 0.2));
   }
 
   void _drawWires(Canvas canvas, Set<int> drawnLabelNets) {
-    Map<int, Wire> longestWirePerNet = {};
-
-    for (var wire in wires) {
-      final netColor = _getNetColor(wire.netId);
-      
-      // Creiamo il paint specifico per questo filo
-      final netPaint = Paint()
-        ..color = netColor
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.0
-        ..strokeCap = StrokeCap.round;
-        
-      wire.draw(canvas, netPaint);
-      
-      if (wire.netId != -1) {
-        double currentLength = (wire.end - wire.start).distance;
-        if (!longestWirePerNet.containsKey(wire.netId)) {
-          longestWirePerNet[wire.netId] = wire;
-        } else {
-          Wire previousLongest = longestWirePerNet[wire.netId]!;
-          double previousLength = (previousLongest.end - previousLongest.start).distance;
-          if (currentLength > previousLength) {
-            longestWirePerNet[wire.netId] = wire;
-          }
-        }
-        drawnLabelNets.add(wire.netId);
-      }
-    }
-    
-    longestWirePerNet.forEach((netId, bestWire) {
-      final midPoint = Offset(
-        (bestWire.start.dx + bestWire.end.dx) / 2,
-        (bestWire.start.dy + bestWire.end.dy) / 2,
-      );
-      String label = (bestWire.netId == 0) ? 'GND' : 'Net ${bestWire.netId}';
-      if (nodeVoltages.containsKey(netId)) {
-        label += '\n${nodeVoltages[netId]!.toStringAsFixed(2)} V';
-      }
-      final textPainter = TextPainter(
-        text: TextSpan(
-          text: label,
-          style: TextStyle(color: _getNetColor(netId), fontSize: 12, fontWeight: FontWeight.bold, shadows: const [
-            Shadow(
-              blurRadius: 3.0,
-              color: Colors.black87,
-              offset: Offset(1, 1),
-            ),
-          ]),
-        ),
-        textAlign: TextAlign.center,
-        textDirection: TextDirection.ltr,
-      );
-      textPainter.layout();
-      textPainter.paint(canvas, midPoint - Offset(textPainter.width / 2, textPainter.height / 2));
-    });
-    
-    // DISEGNO FILO (Mentre l'utente trascina)
+    WireRenderer.draw(canvas, wires, nodeVoltages, drawnLabelNets, _getNetColor);
     if (tempWireStart != null && tempWireCurrent != null) {
-      final tempPaint = Paint()
-        ..color = Colors.greenAccent
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.0
-        ..strokeCap = StrokeCap.round;
-      canvas.drawLine(tempWireStart!, tempWireCurrent!, tempPaint);
+      WireRenderer.drawTempWire(canvas, tempWireStart!, tempWireCurrent!);
     }
   }
 
   void _drawComponents(Canvas canvas, Set<int> drawnLabelNets) {
-    // DEBUG COLLISIONI (mantenuto dalla tua versione)
+    // DEBUG COLLISIONI
     if (kDebugMode) {
       final debugPaint = Paint()
         ..color = Colors.red.withValues(alpha: 0.3)
@@ -204,7 +135,7 @@ class CircuitPainter extends CustomPainter {
 
     if (previewComponent != null) {
       final ghostPaint = Paint()
-        ..color = previewComponent!.componentColor.withValues(alpha: 0.4, green: 2.0)
+        ..color = Colors.white.withValues(alpha: 0.4)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 3.0
         ..strokeJoin = StrokeJoin.round

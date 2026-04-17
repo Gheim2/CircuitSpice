@@ -1,35 +1,60 @@
 import 'dart:math' as math;
 import 'package:circuit_spice/logic/engineering_utils.dart';
+import 'package:circuit_spice/models/current_source.dart';
 import 'package:circuit_spice/models/electronic_component.dart';
+import 'package:circuit_spice/models/ground.dart';
+import 'package:circuit_spice/models/net_label.dart';
+import 'package:circuit_spice/models/resistor.dart';
+import 'package:circuit_spice/models/v_source.dart';
+import 'package:circuit_spice/ui/renderers/symbols/current_source_symbol.dart';
+import 'package:circuit_spice/ui/renderers/symbols/ground_symbol.dart';
+import 'package:circuit_spice/ui/renderers/symbols/net_label_symbol.dart';
+import 'package:circuit_spice/ui/renderers/symbols/resistor_symbol.dart';
+import 'package:circuit_spice/ui/renderers/symbols/symbol_renderer.dart';
+import 'package:circuit_spice/ui/renderers/symbols/v_source_symbol.dart';
 import 'package:flutter/material.dart';
 
 class ComponentRenderer {
-  
-  // static così la classe
-  static void draw(Canvas canvas, ElectronicComponent comp, {Paint? compPaint}){ // current è opzionale
+
+  static final Map<Type, SymbolRenderer> _renderRegistry = {
+    CurrentSource: CurrentSourceSymbol(),
+    Resistor: ResistorSymbol(),
+    NetLabel: NetLabelSymbol(),
+    Ground: GroundSymbol(),
+    VoltageSource: VSourceSymbol(),
+  };
+
+  static void draw(Canvas canvas, ElectronicComponent comp, {Paint? compPaint, bool drawLabels = true}){
     canvas.save();
     canvas.translate(comp.position.dx, comp.position.dy);
     canvas.rotate(comp.rotation * math.pi / 180);
     
     compPaint ??= Paint()
-        ..color = comp.componentColor
+        ..color = Colors.greenAccent
+        ..style = PaintingStyle.stroke
         ..strokeWidth = 2.0
         ..strokeJoin = StrokeJoin.round;
-
-    compPaint.style = comp.fillSymbolPath ? PaintingStyle.fill : PaintingStyle.stroke;
-    // Chiama il metodo specifico del figlio (es. Resistenza o Batteria)
-    canvas.drawPath(comp.symbolPath, compPaint);
-    comp.drawInnerSymbol(canvas, compPaint);
-    
-    // Disegno dei Nodi per tutti i componenti in automatico
-    for (var node in comp.nodes) {
-      canvas.drawCircle(node.relativePosition, 3, compPaint..style = PaintingStyle.fill);
-      compPaint.style = PaintingStyle.stroke;
+    final renderer = _renderRegistry[comp.runtimeType];
+    if (renderer != null) {
+      renderer.drawSymbol(canvas, comp.baseCollisionRect.size, compPaint);
+      renderer.drawInnerSymbol(canvas, compPaint, comp);
+    } else {
+      canvas.drawRect(comp.baseCollisionRect, Paint()..color = Colors.red);
     }
     
+    final nodePaint = Paint()
+      ..color = compPaint.color
+      ..style = PaintingStyle.fill;
+    // Disegno dei Nodi per tutti i componenti in automatico
+    for (var node in comp.nodes) {
+      canvas.drawCircle(node.relativePosition, 3, nodePaint);
+      compPaint.style = PaintingStyle.stroke;
+    }
     canvas.restore();
+    if (drawLabels) {
+      _drawLabels(canvas, comp);
+    }
 
-    _drawLabels(canvas, comp);
   }
 
   static void _drawLabels(Canvas canvas, ElectronicComponent comp) {

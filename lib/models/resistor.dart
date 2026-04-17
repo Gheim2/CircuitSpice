@@ -35,21 +35,12 @@ class Resistor extends ElectronicComponent {
   @override
   Rect get baseCollisionRect => Rect.fromCenter(center: Offset.zero, width: 50, height: 20);
 
-  @override
-  Path get symbolPath {
-    return Path()
-      ..moveTo(-40, 0)..lineTo(-30, 0)
-      ..lineTo(-25, -10)..lineTo(-15, 10)..lineTo(-5, -10)..lineTo(5, 10)..lineTo(15, -10)..lineTo(25, 10)
-      ..lineTo(30, 0)..lineTo(40, 0);
-  }
-  
   // @override
-  // void drawSymbol(Canvas canvas, Paint paint) {
-  //   final path = Path()
+  // Path get symbolPath {
+  //   return Path()
   //     ..moveTo(-40, 0)..lineTo(-30, 0)
   //     ..lineTo(-25, -10)..lineTo(-15, 10)..lineTo(-5, -10)..lineTo(5, 10)..lineTo(15, -10)..lineTo(25, 10)
   //     ..lineTo(30, 0)..lineTo(40, 0);
-  //   canvas.drawPath(path, paint);
   // }
 
 }

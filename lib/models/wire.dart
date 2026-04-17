@@ -28,4 +28,12 @@ class Wire {
     // Se clicchiamo a meno di 15 pixel dal filo, lo abbiamo colpito!
     return (point - projection).distance < 15.0; 
   }
+
+  double get length {
+    return (end - start).distance;
+  }
+
+  Offset getMidpoint() {
+    return Offset((start.dx + end.dx) / 2, (start.dy + end.dy) / 2);
+  }
 }

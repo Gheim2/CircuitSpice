@@ -1,6 +1,6 @@
 import 'package:circuit_spice/ui/renderers/component_renderer.dart';
 import 'package:flutter/material.dart';
-import '../models/electronic_component.dart';
+import '../../models/electronic_component.dart';
 
 class ComponentIcon extends StatelessWidget {
   final ElectronicComponent component;
@@ -48,20 +48,16 @@ class _ComponentIconPainter extends CustomPainter {
     canvas.scale(scale);
     canvas.translate(iconOffset.dx, iconOffset.dy);
 
-    // 3. Prepariamo il pennello
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
-      // Dividiamo lo spessore per la scala! 
+      // Dividiamo lo spessore per la scala
       // Altrimenti, se scaliamo del 30%, anche la linea diventa invisibile.
       ..strokeWidth = 1.5 / scale 
       ..strokeJoin = StrokeJoin.round
       ..strokeCap = StrokeCap.round;
 
-    component.showName = false;
-    component.showValue = false;
-    // 4. Chiamiamo lo stesso identico metodo che usi per il circuito!
-    ComponentRenderer.draw(canvas, component, compPaint: paint);
+    ComponentRenderer.draw(canvas, component, compPaint: paint, drawLabels: false);
     // component.drawSymbol(canvas, paint);
   }
 

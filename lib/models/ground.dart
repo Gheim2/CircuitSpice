@@ -26,13 +26,13 @@ class Ground extends ElectronicComponent {
   @override
   Rect get baseCollisionRect => Rect.fromCenter(center: Offset(0, 10), width: 30, height: 25);
 
-  @override
-  Path get symbolPath {
-    return Path()
-      ..moveTo(0, 0)..lineTo(0, 10)
-      ..moveTo(-15, 10)..lineTo(15, 10)
-      ..moveTo(-10, 16)..lineTo(10, 16)
-      ..moveTo(-5, 22)..lineTo(5, 22);
-  }
+  // @override
+  // Path get symbolPath {
+  //   return Path()
+  //     ..moveTo(0, 0)..lineTo(0, 10)
+  //     ..moveTo(-15, 10)..lineTo(15, 10)
+  //     ..moveTo(-10, 16)..lineTo(10, 16)
+  //     ..moveTo(-5, 22)..lineTo(5, 22);
+  // }
   
 }

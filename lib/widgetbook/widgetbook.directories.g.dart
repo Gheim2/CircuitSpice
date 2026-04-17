@@ -10,6 +10,8 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:circuit_spice/widgetbook/ui/components/components_library_usecase.dart'
+    as _circuit_spice_widgetbook_ui_components_components_library_usecase;
 import 'package:circuit_spice/widgetbook/ui/components/context_toolbar_usecase.dart'
     as _circuit_spice_widgetbook_ui_components_context_toolbar_usecase;
 import 'package:circuit_spice/widgetbook/ui/components/place_bar_usecase.dart'
@@ -25,6 +27,17 @@ final directories = <_widgetbook.WidgetbookNode>[
       _widgetbook.WidgetbookFolder(
         name: 'widgets',
         children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'ComponentsLibrary',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Standard Components Library',
+                builder:
+                    _circuit_spice_widgetbook_ui_components_components_library_usecase
+                        .buildComponentsLibraryUseCase,
+              ),
+            ],
+          ),
           _widgetbook.WidgetbookComponent(
             name: 'ContextToolbar',
             useCases: [

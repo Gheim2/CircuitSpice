@@ -7,7 +7,7 @@ import 'package:vector_math/vector_math_64.dart' hide Colors;
 import 'logic/circuit_manager.dart';
 import 'ui/widgets/toolbar.dart';
 import 'ui/circuit_painter.dart';
-import 'ui/dialogs.dart';
+import 'ui/overlays/dialogs.dart';
 import 'ui/widgets/placement_toolbar.dart';
 
 

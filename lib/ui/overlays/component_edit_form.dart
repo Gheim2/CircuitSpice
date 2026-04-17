@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/electronic_component.dart';
-import '../logic/engineering_utils.dart';
+import '../../models/electronic_component.dart';
+import '../../logic/engineering_utils.dart';
 
 class ComponentEditForm extends StatefulWidget {
   final ElectronicComponent component;

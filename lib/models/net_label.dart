@@ -27,8 +27,8 @@ class NetLabel extends ElectronicComponent{
   @override
   bool get isValueEditable => false;
 
-  @override
-  Color get componentColor => isSelected ? Colors.orangeAccent : Colors.purpleAccent;
+  // @override
+  // Color get componentColor => isSelected ? Colors.orangeAccent : Colors.purpleAccent;
 
   @override
   List<ComponentNode> get nodes => [ComponentNode(Offset.zero)];
@@ -39,30 +39,30 @@ class NetLabel extends ElectronicComponent{
   @override
   Rect get baseCollisionRect => Rect.fromLTRB(3, -12, 62, 12);
   
-  @override
-  Path get symbolPath {
-    return Path()
-      ..moveTo(10,0)
-      ..lineTo(15, -10)..lineTo(60, -10)..lineTo(60, 10)..lineTo(15, 10)..close();
-  }
+  // @override
+  // Path get symbolPath {
+  //   return Path()
+  //     ..moveTo(10,0)
+  //     ..lineTo(15, -10)..lineTo(60, -10)..lineTo(60, 10)..lineTo(15, 10)..close();
+  // }
 
-  @override
-  void drawInnerSymbol(Canvas canvas, Paint paint) {
-    // 1. Disegniamo la linea di attacco (la teniamo fuori dal Path principale per non riempirla)
-    canvas.drawLine(Offset.zero, const Offset(15, 0), paint);
+  // @override
+  // void drawInnerSymbol(Canvas canvas, Paint paint) {
+  //   // 1. Disegniamo la linea di attacco (la teniamo fuori dal Path principale per non riempirla)
+  //   canvas.drawLine(Offset.zero, const Offset(15, 0), paint);
 
-    // 2. Disegniamo il testo del nome DENTRO il componente
-    if (name.isNotEmpty) {
-      Color textColor = paint.color == Colors.white ? Colors.black : Colors.white;
-      final tp = TextPainter(
-        text: TextSpan(
-          text: name,
-          style: TextStyle(color: textColor, fontSize: 12, fontWeight: FontWeight.bold, height: 1.0),
-        ),
-        textDirection: TextDirection.ltr,
-      )..layout();
-      tp.paint(canvas, Offset(15 + (45 - tp.width) / 2, -tp.height / 2));
-    }
-  }
+  //   // 2. Disegniamo il testo del nome DENTRO il componente
+  //   if (name.isNotEmpty) {
+  //     Color textColor = paint.color == Colors.white ? Colors.black : Colors.white;
+  //     final tp = TextPainter(
+  //       text: TextSpan(
+  //         text: name,
+  //         style: TextStyle(color: textColor, fontSize: 12, fontWeight: FontWeight.bold, height: 1.0),
+  //       ),
+  //       textDirection: TextDirection.ltr,
+  //     )..layout();
+  //     tp.paint(canvas, Offset(15 + (45 - tp.width) / 2, -tp.height / 2));
+  //   }
+  // }
 
 }
