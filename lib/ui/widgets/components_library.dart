@@ -1,7 +1,8 @@
-import 'package:circuit_spice/ui/widgets/component_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widget_previews.dart';
 import 'package:circuit_spice/config/app_mode.dart';
+import 'package:circuit_spice/config/component_registry.dart';
+import 'package:circuit_spice/ui/widgets/component_icon.dart';
 
 class CatalogItem {
   final String label;
@@ -26,17 +27,17 @@ class ComponentsLibrary extends StatefulWidget {
 class _ComponentsLibraryState extends State<ComponentsLibrary> {
   String _searchQuery = '';
 
-  final List<CatalogItem> _allComponents = [
-    CatalogItem(label: 'Resistor', mode: AppMode.placeResistor),
-    CatalogItem(label: 'V-Source', mode: AppMode.placeVoltage),
-    CatalogItem(label: 'I-Source', mode: AppMode.placeCurrent),
-    CatalogItem(label: 'Ground', mode: AppMode.placeGround),
-    CatalogItem(label: 'Net Label', mode: AppMode.placeLabelNet, iconOffset: const Offset(-30, 0)), // Sposta l'icona verso sinistra),
-  ];
+  late List<CatalogItem> _allComponents;
 
   @override
   void initState() {
     super.initState();
+    _allComponents = globalComponentRegistry.map((m) => CatalogItem(
+      label: m.label,
+      mode: m.mode,
+      scale: m.iconScale,
+      iconOffset: m.iconOffset,
+    )).toList();
     _allComponents.sort((a, b) => a.label.compareTo(b.label));
   }
 

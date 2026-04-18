@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import '../base/symbol_renderer.dart';
 import 'net_label.dart';
 
-class NetLabelSymbol implements SymbolRenderer<NetLabel> {
+class NetLabelSymbol extends SymbolRenderer<NetLabel> {
 
-@override
+  @override
+  Color get baseColor => Colors.purpleAccent;
+
+  @override
   void drawSymbol(Canvas canvas, Size size, Paint paint) {
     canvas.drawLine(Offset.zero, const Offset(10.5, 0), paint);
     final fillPaint = paint..style = PaintingStyle.fill; 

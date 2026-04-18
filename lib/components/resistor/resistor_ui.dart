@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../base/symbol_renderer.dart';
 import 'resistor.dart';
 
-class ResistorSymbol implements SymbolRenderer<Resistor> {
+class ResistorSymbol extends SymbolRenderer<Resistor> {
   @override
   void drawSymbol(Canvas canvas, Size size, Paint paint) {
     final path = Path()

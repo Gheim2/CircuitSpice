@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:circuit_spice/config/app_mode.dart';
+import 'package:circuit_spice/config/component_registry.dart';
 import 'package:circuit_spice/logic/engineering_utils.dart';
 import 'package:circuit_spice/components/components.dart';
 import 'package:flutter/material.dart';
@@ -7,19 +8,11 @@ import 'package:flutter/material.dart';
 class ComponentRenderer {
 
   static final Map<Type, SymbolRenderer> _renderRegistry = {
-    CurrentSource: CurrentSourceSymbol(),
-    Resistor: ResistorSymbol(),
-    NetLabel: NetLabelSymbol(),
-    Ground: GroundSymbol(),
-    VoltageSource: VSourceSymbol(),
+    for (var m in globalComponentRegistry) m.modelType : m.renderer,
   };
 
   static final Map<AppMode, SymbolRenderer> _iconRegistry = {
-    AppMode.placeResistor: ResistorSymbol(),
-    AppMode.placeVoltage: VSourceSymbol(),
-    AppMode.placeCurrent: CurrentSourceSymbol(),
-    AppMode.placeGround: GroundSymbol(),
-    AppMode.placeLabelNet: NetLabelSymbol(),
+    for (var m in globalComponentRegistry) m.mode : m.renderer,
   };
 
   static SymbolRenderer? getRendererForMode(AppMode mode) {
@@ -30,13 +23,15 @@ class ComponentRenderer {
     canvas.save();
     canvas.translate(comp.position.dx, comp.position.dy);
     canvas.rotate(comp.rotation * math.pi / 180);
+
+    final renderer = _renderRegistry[comp.runtimeType];
+    final paintColor = renderer?.baseColor ?? Colors.greenAccent;
     
     compPaint ??= Paint()
-        ..color = Colors.greenAccent
+        ..color = paintColor
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2.0
         ..strokeJoin = StrokeJoin.round;
-    final renderer = _renderRegistry[comp.runtimeType];
     if (renderer != null) {
       renderer.drawSymbol(canvas, comp.baseCollisionRect.size, compPaint);
       renderer.drawInnerSymbol(canvas, compPaint, comp);

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../base/symbol_renderer.dart';
 import 'ground.dart';
 
-class GroundSymbol implements SymbolRenderer<Ground> {
+class GroundSymbol extends SymbolRenderer<Ground> {
   @override
   void drawSymbol(Canvas canvas, Size size, Paint paint) {
     final path = Path()

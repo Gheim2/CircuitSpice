@@ -21,16 +21,44 @@ Il progetto segue rigidi principi di *Separation of Concerns* (SoC), separando i
 
 La struttura principale (Vertical Slicing) è così divisa:
 
-    lib/
-    ├── logic/                  # Core engine: CircuitManager, InteractionController, Math/MNA
-    ├── ui/                     # Interfaccia utente: Viewers, Toolbars, Renderer Manager
-    └── components/             # Moduli indipendenti per ogni componente elettronico
-        ├── base/               # Interfacce astratte (ElectronicComponent, SymbolRenderer)
-        ├── resistor/           # Logica (Model) + Grafica (UI) del Resistore
-        ├── current_source/     # Logica (Model) + Grafica (UI) del Generatore
-        └── ...
+   lib/
+   │   main.dart
+   │
+   ├───components/               # Moduli indipendenti per ogni componente elettronico
+   │   │   components.dart
+   │   │   core.dart
+   │   │
+   │   ├───base/                 # Interfacce astratte
+   │   │       electronic_component.dart
+   │   │       node.dart
+   │   │       symbol_renderer.dart
+   │   │
+   │   ├───current_source/       # Logica (Model) + Grafica (UI) del Generatore
+   │   │       current_source.dart
+   │   │       current_source_ui.dart
+   │   │
+   │   ├───resistor/             # Logica (Model) + Grafica (UI) del Resistore
+   │   │       resistor.dart
+   │   │       resistor_ui.dart
+   │   │
+   │   └───...
+   │
+   ├───config/                   # File di Configurazione
+   │       app_mode.dart
+   │       component_registry.dart
+   │
+   ├───logic/                    # Core engine: CircuitManager, InteractionController, Math/MNA
+   │
+   └───ui/                       # Interfaccia utente: Viewers, Toolbars, Renderer Manager
 
 ---
+
+Il simulatore è costruito per essere estremamente scalabile. L'aggiunta di nuovi componenti è governata da un **Registro Centrale** (`ComponentManifest`), eliminando la necessità di modificare decine di file.
+
+Per aggiungere un nuovo componente elettrico, basta:
+1. Creare i file per la logica (`Component`) e il disegno (`SymbolRenderer`).
+2. Aggiungere una singola voce al `globalComponentRegistry`.
+*Il sistema (Libreria UI, Factory di istanziazione, e Renderer Grafico) si aggiornerà e configurerà in automatico leggendo il manifesto!*
 
 ## 🚀 Come Iniziare
 
