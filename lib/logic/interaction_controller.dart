@@ -3,16 +3,14 @@ import 'package:flutter/material.dart';
 import '../config/app_mode.dart';
 import '../components/core.dart';
 import 'circuit_manager.dart';
+import 'component_factory.dart';
 
 class InteractionController extends ChangeNotifier {
   final CircuitManager manager;
 
   // --- STATO DEL CONTROLLER ---
   AppMode currentMode = AppMode.select;
-  final ValueNotifier<int> _resCounter = ValueNotifier<int>(0);
-  final ValueNotifier<int> _vSourceCounter = ValueNotifier<int>(0);
-  final ValueNotifier<int> _cSourceCounter = ValueNotifier<int>(0);
-  final ValueNotifier<int> _labelCounter = ValueNotifier<int>(0);
+  final Map<Type, ValueNotifier<int>> _componentCounters = {};
   ValueNotifier<int>? _activePreviewCounter; // Per tenere traccia del contatore attivo durante il posizionamento
   DateTime? _downTime;
 
@@ -111,30 +109,12 @@ class InteractionController extends ChangeNotifier {
   // --- AZIONI DEL MENU DI ANTEPRIMA ---
 
   void _initPreviewForMode(AppMode mode, {Offset? spawnPos}) {
-    switch (mode) {
-      case AppMode.placeResistor:
-        previewComponent = Resistor(name: 'R${_resCounter.value + 1}', value: 1000);
-        _activePreviewCounter = _resCounter;
-        break;
-      case AppMode.placeGround:
-        previewComponent = Ground();
-        _activePreviewCounter = null;
-        break;
-      case AppMode.placeVoltage:
-        previewComponent = VoltageSource(name: 'V${_vSourceCounter.value + 1}', value: 5.0);
-        _activePreviewCounter = _vSourceCounter;
-        break;
-      case AppMode.placeCurrent:
-        previewComponent = CurrentSource(name: 'I${_cSourceCounter.value + 1}', value: 1.0);
-        _activePreviewCounter = _cSourceCounter;
-        break;
-      case AppMode.placeLabelNet:
-        previewComponent = NetLabel();
-        _activePreviewCounter = _labelCounter;
-        break;
-      default:
-        break;
-    }
+    // temp per capire che tipo di componente è
+    ElectronicComponent? tempComp = ComponentFactory.spawn(mode, 1);
+    if (tempComp == null) return;
+    _activePreviewCounter = tempComp is Ground ? null : _getCounter(tempComp.runtimeType);
+    int nextId = _activePreviewCounter != null ? _activePreviewCounter!.value + 1 : 0;
+    previewComponent = ComponentFactory.spawn(mode, nextId);
     if (previewComponent != null) {
       spawnPos ??= Offset.zero;
       _handlePlaceComponent(spawnPos, previewComponent!, counter: _activePreviewCounter);
@@ -142,13 +122,7 @@ class InteractionController extends ChangeNotifier {
   }
 
   void _initPreviewForComponent(ElectronicComponent comp, {Offset? spawnPos}) {
-    switch (comp) {
-      case Resistor(): _activePreviewCounter = _resCounter; break;
-      case VoltageSource(): _activePreviewCounter = _vSourceCounter; break;
-      case CurrentSource(): _activePreviewCounter = _cSourceCounter; break;
-      case NetLabel(): _activePreviewCounter = _labelCounter; break;
-      default: break;
-    }
+    _activePreviewCounter = comp is Ground ? null : _getCounter(comp.runtimeType);
     if (_activePreviewCounter != null && comp.prefix.isNotEmpty) {
       comp.name = "${comp.prefix}${_activePreviewCounter!.value + 1}";
     }
@@ -179,7 +153,6 @@ class InteractionController extends ChangeNotifier {
 
   void rotatePreview() {
     if (previewComponent != null) {
-      // Qui potresti voler passare più informazioni, come il tipo di componente, per mostrare un dialogo personalizzato
       previewComponent!.rotation = (previewComponent!.rotation + 90) % 360;
       notifyListeners();
     }
@@ -212,6 +185,11 @@ class InteractionController extends ChangeNotifier {
   }
 
   // --- LOGICA PRIVATA DEI SINGOLI STRUMENTI ---
+
+  ValueNotifier<int> _getCounter(Type type) {
+    _componentCounters.putIfAbsent(type, () => ValueNotifier<int>(0));
+    return _componentCounters[type]!;
+  }
 
   void _handlePlaceComponent(Offset pos, ElectronicComponent comp, {ValueNotifier<int>? counter}) {
     final snappedPos = manager.getSnappedPosition(pos);
