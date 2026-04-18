@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'symbol_renderer.dart';
-import '../../../models/resistor.dart';
+import '../base/symbol_renderer.dart';
+import 'resistor.dart';
 
 class ResistorSymbol implements SymbolRenderer<Resistor> {
   @override

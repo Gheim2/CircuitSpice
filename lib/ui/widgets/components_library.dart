@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ComponentsLibrary extends StatelessWidget {
 
-  ComponentsLibrary({super.key});
+  const ComponentsLibrary({super.key});
 
   // A big container with all the components, scrollable, with a search bar on top
 

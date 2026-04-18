@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'electronic_component.dart';
-import 'node.dart';
+import '../base/electronic_component.dart';
+import '../base/node.dart';
 
 // Implementazione specifica della Resistenza
 class Resistor extends ElectronicComponent {
@@ -34,13 +34,5 @@ class Resistor extends ElectronicComponent {
 
   @override
   Rect get baseCollisionRect => Rect.fromCenter(center: Offset.zero, width: 50, height: 20);
-
-  // @override
-  // Path get symbolPath {
-  //   return Path()
-  //     ..moveTo(-40, 0)..lineTo(-30, 0)
-  //     ..lineTo(-25, -10)..lineTo(-15, 10)..lineTo(-5, -10)..lineTo(5, 10)..lineTo(15, -10)..lineTo(25, 10)
-  //     ..lineTo(30, 0)..lineTo(40, 0);
-  // }
 
 }

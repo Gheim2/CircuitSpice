@@ -1,12 +1,8 @@
-import 'package:circuit_spice/logic/circuit_engine.dart';
-import 'package:circuit_spice/models/net_label.dart';
-import 'package:flutter/foundation.dart';
-// import 'package:flutter/material.dart';
-import 'dart:ui';
-import '../models/electronic_component.dart';
-import '../models/wire.dart';
-import '../models/ground.dart';
 import 'dart:math' as math;
+import 'dart:ui';
+import 'package:flutter/foundation.dart';
+import 'circuit_engine.dart';
+import '../components/core.dart';
 
 class CircuitManager {
   final List<ElectronicComponent> components = [];

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../models/electronic_component.dart';
+import 'electronic_component.dart';
 
 abstract class SymbolRenderer<T extends ElectronicComponent> {
   /// Disegna il corpo principale del componente

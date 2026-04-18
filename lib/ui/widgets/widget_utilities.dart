@@ -1,7 +1,7 @@
-import 'package:circuit_spice/models/electronic_component.dart';
-import 'package:circuit_spice/ui/widgets/component_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:circuit_spice/components/core.dart';
+import 'component_icon.dart';
 // Da importare per disegnare le toolbar
 
 Widget buildCompBtn(

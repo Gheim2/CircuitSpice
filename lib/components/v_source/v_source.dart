@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'electronic_component.dart';
-import 'node.dart';
+import '../base/electronic_component.dart';
+import '../base/node.dart';
 
 class VoltageSource extends ElectronicComponent {
   VoltageSource({super.position = Offset.zero, super.value = 0.0, super.name = '', super.rotation});
@@ -31,16 +31,5 @@ class VoltageSource extends ElectronicComponent {
 
   @override
   Rect get baseCollisionRect => Rect.fromCenter(center: Offset.zero, width: 40, height: 40);
-
-  // @override
-  // Path get symbolPath {
-  //   return Path()
-  //     ..moveTo(0, -40)..lineTo(0, -20)
-  //     ..moveTo(0, 20)..lineTo(0, 40)
-  //     ..addOval(Rect.fromCircle(center: Offset.zero, radius: 20))
-  //     ..moveTo(-5, -10)..lineTo(5, -10)
-  //     ..moveTo(0, -15)..lineTo(0, -5)
-  //     ..moveTo(-5, 10)..lineTo(5, 10);
-  // }
 
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'symbol_renderer.dart';
-import '../../../models/net_label.dart';
+import '../base/symbol_renderer.dart';
+import 'net_label.dart';
 
 class NetLabelSymbol implements SymbolRenderer<NetLabel> {
 

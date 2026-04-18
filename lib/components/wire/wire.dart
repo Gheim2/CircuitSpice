@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'dart:math' as math;
 
 class Wire {
@@ -8,10 +8,6 @@ class Wire {
   int netId = -1;
 
   Wire(this.start, this.end);
-
-  void draw(Canvas canvas, Paint paint) {
-    canvas.drawLine(start, end, paint);
-  }
 
   bool contains(Offset point) {
     double l2 = (start.dx - end.dx) * (start.dx - end.dx) + (start.dy - end.dy) * (start.dy - end.dy);
@@ -25,7 +21,7 @@ class Wire {
     
     Offset projection = Offset(start.dx + t * (end.dx - start.dx), start.dy + t * (end.dy - start.dy));
     
-    // Se clicchiamo a meno di 15 pixel dal filo, lo abbiamo colpito!
+    // Se clicchiamo a meno di 15 pixel dal filo, lo abbiamo preso
     return (point - projection).distance < 15.0; 
   }
 

@@ -1,6 +1,6 @@
-import '../../models/wire.dart';
+import 'wire.dart';
 import 'package:flutter/material.dart';
-import 'drawing_utils.dart';
+import '../../ui/renderers/drawing_utils.dart';
 
 class WireRenderer {
   static void draw(
@@ -19,7 +19,8 @@ class WireRenderer {
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2.0
         ..strokeCap = StrokeCap.round;
-      wire.draw(canvas, netPaint);
+      
+      canvas.drawLine(wire.start, wire.end, netPaint);
       if (wire.netId != -1) {
         double currentLength = wire.length;
         if (!longestWirePerNet.containsKey(wire.netId)) {

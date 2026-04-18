@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'electronic_component.dart';
-import 'node.dart';
+import '../base/electronic_component.dart';
+import '../base/node.dart';
 
 class Ground extends ElectronicComponent {
   Ground({super.position = Offset.zero}) : super(name: 'GND', value: 0, showName: false, showValue: false);
@@ -25,14 +25,5 @@ class Ground extends ElectronicComponent {
 
   @override
   Rect get baseCollisionRect => Rect.fromCenter(center: Offset(0, 10), width: 30, height: 25);
-
-  // @override
-  // Path get symbolPath {
-  //   return Path()
-  //     ..moveTo(0, 0)..lineTo(0, 10)
-  //     ..moveTo(-15, 10)..lineTo(15, 10)
-  //     ..moveTo(-10, 16)..lineTo(10, 16)
-  //     ..moveTo(-5, 22)..lineTo(5, 22);
-  // }
   
 }

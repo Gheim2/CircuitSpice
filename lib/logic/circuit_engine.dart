@@ -1,10 +1,6 @@
-import 'package:circuit_spice/models/current_source.dart';
 import 'package:flutter/foundation.dart';
-
-import '../models/electronic_component.dart';
-import '../models/resistor.dart';
-import '../models/v_source.dart';
 import 'package:equations/equations.dart';
+import '../components/core.dart';
 
 class CircuitEngine {
   final List<ElectronicComponent> components;

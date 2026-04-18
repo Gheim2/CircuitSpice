@@ -1,6 +1,6 @@
 import 'package:circuit_spice/ui/renderers/component_renderer.dart';
 import 'package:flutter/material.dart';
-import '../../models/electronic_component.dart';
+import 'package:circuit_spice/components/base/electronic_component.dart';
 
 class ComponentIcon extends StatelessWidget {
   final ElectronicComponent component;

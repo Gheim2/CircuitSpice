@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'electronic_component.dart';
-import 'node.dart';
+import '../base/electronic_component.dart';
+import '../base/node.dart';
 
 class CurrentSource extends ElectronicComponent {
   CurrentSource({

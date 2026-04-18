@@ -3,7 +3,7 @@ import 'dart:math' as math;
 // import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'node.dart';
-import '../logic/engineering_utils.dart';
+import '../../logic/engineering_utils.dart';
 
 enum LabelPosition { top, right, bottom, left }
 
@@ -34,8 +34,6 @@ abstract class ElectronicComponent {
   }
 
   bool get drawCurrent => true;
-  bool get fillSymbolPath => false;
-  // Color get componentColor => isSelected ? Colors.orangeAccent : Colors.cyanAccent;
   LabelPosition get defaultLabelPosition => LabelPosition.top;
   String get prefix => '';
   String get unit => ''; // Override nelle sottoclassi per unità specifiche
@@ -47,7 +45,6 @@ abstract class ElectronicComponent {
 
   List<ComponentNode> get nodes;
   Rect get baseCollisionRect;
-  // Path get symbolPath; // Ogni componente definisce il proprio simbolo
 
   // Metodi di posizione / collisione
   List<Offset> get globalNodePositions => 

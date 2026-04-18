@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../models/current_source.dart';
-import 'symbol_renderer.dart';
+import 'current_source.dart';
+import '../base/symbol_renderer.dart';
 
 class CurrentSourceSymbol implements SymbolRenderer<CurrentSource> {
   

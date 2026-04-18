@@ -1,17 +1,6 @@
 import 'dart:math' as math;
 import 'package:circuit_spice/logic/engineering_utils.dart';
-import 'package:circuit_spice/models/current_source.dart';
-import 'package:circuit_spice/models/electronic_component.dart';
-import 'package:circuit_spice/models/ground.dart';
-import 'package:circuit_spice/models/net_label.dart';
-import 'package:circuit_spice/models/resistor.dart';
-import 'package:circuit_spice/models/v_source.dart';
-import 'package:circuit_spice/ui/renderers/symbols/current_source_symbol.dart';
-import 'package:circuit_spice/ui/renderers/symbols/ground_symbol.dart';
-import 'package:circuit_spice/ui/renderers/symbols/net_label_symbol.dart';
-import 'package:circuit_spice/ui/renderers/symbols/resistor_symbol.dart';
-import 'package:circuit_spice/ui/renderers/symbols/symbol_renderer.dart';
-import 'package:circuit_spice/ui/renderers/symbols/v_source_symbol.dart';
+import 'package:circuit_spice/components/components.dart';
 import 'package:flutter/material.dart';
 
 class ComponentRenderer {

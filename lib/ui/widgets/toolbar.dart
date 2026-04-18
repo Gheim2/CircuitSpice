@@ -1,9 +1,5 @@
-import 'package:circuit_spice/models/current_source.dart';
-import 'package:circuit_spice/models/ground.dart';
-import 'package:circuit_spice/models/net_label.dart';
-import 'package:circuit_spice/models/v_source.dart';
+import 'package:circuit_spice/components/components.dart';
 import 'package:flutter/material.dart';
-import '../../models/resistor.dart';
 import '../../config/app_mode.dart';
 import 'widget_utilities.dart';
 

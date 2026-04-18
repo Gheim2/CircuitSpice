@@ -1,14 +1,8 @@
-// import 'package:circuit_spice/models/component_label.dart';
-import 'package:circuit_spice/config/app_mode.dart';
-import 'package:circuit_spice/models/current_source.dart';
-import 'package:circuit_spice/models/net_label.dart';
-import 'package:flutter/material.dart';
-import '../models/electronic_component.dart';
-import '../models/resistor.dart';
-import '../models/ground.dart';
-import '../models/v_source.dart';
-import 'circuit_manager.dart';
 import 'dart:math' as math;
+import 'package:flutter/material.dart';
+import '../config/app_mode.dart';
+import '../components/core.dart';
+import 'circuit_manager.dart';
 
 class InteractionController extends ChangeNotifier {
   final CircuitManager manager;

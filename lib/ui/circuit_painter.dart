@@ -1,10 +1,8 @@
-import 'package:circuit_spice/ui/renderers/grid_renderer.dart';
-import 'package:circuit_spice/ui/renderers/wire_renderer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import '../models/electronic_component.dart';
-import '../models/wire.dart';
+import 'package:circuit_spice/ui/renderers/grid_renderer.dart';
 import 'renderers/component_renderer.dart';
+import 'package:circuit_spice/components/components.dart';
 
 class CircuitPainter extends CustomPainter {
   final List<ElectronicComponent> components;

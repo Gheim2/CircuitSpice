@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'symbol_renderer.dart';
-import '../../../models/v_source.dart';
+import '../base/symbol_renderer.dart';
+import 'v_source.dart';
 
 class VSourceSymbol implements SymbolRenderer<VoltageSource> {
   @override

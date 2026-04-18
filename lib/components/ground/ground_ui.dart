@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'symbol_renderer.dart';
-import '../../../models/ground.dart';
+import '../base/symbol_renderer.dart';
+import 'ground.dart';
 
 class GroundSymbol implements SymbolRenderer<Ground> {
   @override
