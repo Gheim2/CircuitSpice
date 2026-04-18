@@ -1,4 +1,3 @@
-import 'package:circuit_spice/components/components.dart';
 import 'package:flutter/material.dart';
 import '../../config/app_mode.dart';
 import 'widget_utilities.dart';
@@ -7,12 +6,16 @@ class WorkspaceToolbar extends StatelessWidget {
   final AppMode currentMode;
   final ValueChanged<AppMode> onModeChanged;
   final VoidCallback onPlayPressed;
+  final VoidCallback onToggleLibrary; 
+  final bool isLibraryOpen;
 
   const WorkspaceToolbar({
     super.key,
     required this.currentMode,
     required this.onModeChanged,
     required this.onPlayPressed,
+    required this.onToggleLibrary,
+    required this.isLibraryOpen,
   });
 
   @override
@@ -25,15 +28,14 @@ class WorkspaceToolbar extends StatelessWidget {
           buildBtn(Icons.ads_click, () => onModeChanged(AppMode.select), 'Select', isActive: _isActive(AppMode.select)),
           buildBtn(Icons.delete, () => onModeChanged(AppMode.erase), 'Erase', activeColor: Colors.redAccent, isActive: _isActive(AppMode.erase)),
           buildBtn(Icons.linear_scale, () => onModeChanged(AppMode.drawWire), 'Wire', isActive: _isActive(AppMode.drawWire)),
-          buildCompBtn(Resistor(position: Offset.zero), () => onModeChanged(AppMode.placeResistor), 'Resistor', isActive: _isActive(AppMode.placeResistor)),
-          buildCompBtn(VoltageSource(position: Offset.zero), () => onModeChanged(AppMode.placeVoltage), 'Voltage', isActive: _isActive(AppMode.placeVoltage)),
-          buildCompBtn(CurrentSource(position: Offset.zero), () => onModeChanged(AppMode.placeCurrent), 'Current', isActive: _isActive(AppMode.placeCurrent)),
-          buildCompBtn(Ground(position: Offset.zero), () => onModeChanged(AppMode.placeGround), 'Ground', customScale: 1.8, iconOffset: Offset(0, -10), isActive: _isActive(AppMode.placeGround)),
-          buildCompBtn(NetLabel(position: Offset.zero), () => onModeChanged(AppMode.placeLabelNet), 'Net Label', iconOffset: Offset(-35, 0), isActive: _isActive(AppMode.placeLabelNet)),
-          IconButton(icon: const Icon(Icons.play_arrow_rounded, color: Colors.green),
-            tooltip: 'Simulate',
-            onPressed: onPlayPressed,
-          ),
+          buildModeBtn(AppMode.placeResistor, () => onModeChanged(AppMode.placeResistor), 'Resistor', isActive: _isActive(AppMode.placeResistor)),
+          buildModeBtn(AppMode.placeVoltage, () => onModeChanged(AppMode.placeVoltage), 'Voltage', isActive: _isActive(AppMode.placeVoltage)),
+          buildModeBtn(AppMode.placeCurrent, () => onModeChanged(AppMode.placeCurrent), 'Current', isActive: _isActive(AppMode.placeCurrent)),
+          buildModeBtn(AppMode.placeGround, () => onModeChanged(AppMode.placeGround), 'Ground', customScale: 1.8, iconOffset: Offset(0, -10), isActive: _isActive(AppMode.placeGround)),
+          buildModeBtn(AppMode.placeLabelNet, () => onModeChanged(AppMode.placeLabelNet), 'Net Label', iconOffset: Offset(-35, 0), isActive: _isActive(AppMode.placeLabelNet)),
+          separator(),
+          buildBtn(Icons.category, onToggleLibrary, 'Library', activeColor: Colors.blueAccent, isActive: isLibraryOpen),
+          buildBtn(Icons.play_arrow_rounded, onPlayPressed, 'Simulate', baseColor: Colors.green),
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'package:circuit_spice/config/app_mode.dart';
 import 'package:circuit_spice/logic/engineering_utils.dart';
 import 'package:circuit_spice/components/components.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,18 @@ class ComponentRenderer {
     Ground: GroundSymbol(),
     VoltageSource: VSourceSymbol(),
   };
+
+  static final Map<AppMode, SymbolRenderer> _iconRegistry = {
+    AppMode.placeResistor: ResistorSymbol(),
+    AppMode.placeVoltage: VSourceSymbol(),
+    AppMode.placeCurrent: CurrentSourceSymbol(),
+    AppMode.placeGround: GroundSymbol(),
+    AppMode.placeLabelNet: NetLabelSymbol(),
+  };
+
+  static SymbolRenderer? getRendererForMode(AppMode mode) {
+    return _iconRegistry[mode];
+  }
 
   static void draw(Canvas canvas, ElectronicComponent comp, {Paint? compPaint, bool drawLabels = true}){
     canvas.save();
@@ -115,4 +128,6 @@ class ComponentRenderer {
     
     currentText.paint(canvas, Offset(textOffsetX, textOffsetY));
   }
+
+  
 }

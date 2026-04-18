@@ -1,45 +1,114 @@
+import 'package:circuit_spice/ui/widgets/component_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
+import 'package:circuit_spice/config/app_mode.dart';
 
-class ComponentsLibrary extends StatelessWidget {
+class CatalogItem {
+  final String label;
+  final AppMode mode;
+  final double scale;
+  final Offset iconOffset;
+  CatalogItem({required this.label, required this.mode, this.scale = 1.0, this.iconOffset = Offset.zero});
+}
 
-  const ComponentsLibrary({super.key});
+class ComponentsLibrary extends StatefulWidget {
+  final Function(AppMode) onComponentSelected;
+  final VoidCallback onClose;
+  const ComponentsLibrary({
+    super.key,
+    required this.onComponentSelected,
+    required this.onClose,
+  });
+  @override
+  State<ComponentsLibrary> createState() => _ComponentsLibraryState();
+}
 
-  // A big container with all the components, scrollable, with a search bar on top
+class _ComponentsLibraryState extends State<ComponentsLibrary> {
+  String _searchQuery = '';
+
+  final List<CatalogItem> _allComponents = [
+    CatalogItem(label: 'Resistor', mode: AppMode.placeResistor),
+    CatalogItem(label: 'V-Source', mode: AppMode.placeVoltage),
+    CatalogItem(label: 'I-Source', mode: AppMode.placeCurrent),
+    CatalogItem(label: 'Ground', mode: AppMode.placeGround),
+    CatalogItem(label: 'Net Label', mode: AppMode.placeLabelNet, iconOffset: const Offset(-30, 0)), // Sposta l'icona verso sinistra),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _allComponents.sort((a, b) => a.label.compareTo(b.label));
+  }
 
   @override
   Widget build(BuildContext context) {
+    final filteredComponents = _allComponents.where((item) => item
+        .label.toLowerCase()
+        .contains(_searchQuery.toLowerCase())).toList();
+
     return Container(
-      width: 250,
-      color: Colors.grey[900],
+      width: 320,
+      height: 400,
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black54,
+            blurRadius: 15,
+            offset: Offset(0, 8),
+          ),
+        ],
+        border: Border.all(color: Colors.white12, width: 1),
+      ),
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search components...',
-                prefixIcon: Icon(Icons.search, color: Colors.white70),
-                filled: true,
-                fillColor: Colors.grey[800],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide.none,
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    onChanged: (value) => setState(() => _searchQuery = value),
+                    decoration: InputDecoration(
+                      hintText: 'Search...',
+                      hintStyle: const TextStyle(color: Colors.white54, fontSize: 14),
+                      prefixIcon: const Icon(Icons.search, color: Colors.white70, size: 20),
+                      filled: true,
+                      fillColor: Colors.grey[800],
+                      contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    style: const TextStyle(color: Colors.white, fontSize: 14),
+                  ),
                 ),
-              ),
-              style: TextStyle(color: Colors.white),
+                const SizedBox(width: 8),
+                IconButton(
+                  icon: const Icon(Icons.close, color: Colors.white70),
+                  onPressed: widget.onClose,
+                  tooltip: 'Close',
+                ),
+              ],
             ),
           ),
+          const Divider(height: 1, color: Colors.white12),
           Expanded(
-            child: ListView(
+            child: GridView.builder(
               padding: const EdgeInsets.all(8.0),
-              children: [
-                // Qui andranno i componenti, per ora metto dei placeholder
-                _buildComponentItem(context, "Resistor"),
-                _buildComponentItem(context, "Capacitor"),
-                _buildComponentItem(context, "Inductor"),
-                _buildComponentItem(context, "Battery"),
-                _buildComponentItem(context, "Diode"),
-              ],
+              itemCount: filteredComponents.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 0.85,
+              ),
+              itemBuilder: (context, index) {
+                final item = filteredComponents[index];
+                return _buildGridItem(item);
+              },
             ),
           ),
         ],
@@ -47,15 +116,63 @@ class ComponentsLibrary extends StatelessWidget {
     );
   }
 
-  Widget _buildComponentItem(BuildContext context, String name) {
-    return ListTile(
-      title: Text(
-        name,
-        style: TextStyle(color: Colors.white),
-      ),
+  Widget _buildGridItem(CatalogItem item) {
+    return InkWell(
       onTap: () {
-        // Handle component selection
+        widget.onComponentSelected(item.mode);
+        widget.onClose();
       },
+      borderRadius: BorderRadius.circular(8),
+      hoverColor: Colors.white10,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white.withAlpha(5),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.white12, width: 1),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ComponentIcon(
+              mode: item.mode,
+              size: 40,
+              color: Colors.cyanAccent,
+              customScale: item.scale,
+              iconOffset: item.iconOffset,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              item.label,
+              style: const TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w500),
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
     );
+
   }
+}
+
+// ==========================================
+// SEZIONE PREVIEW PER VSCODE
+// ==========================================
+@Preview()
+Widget componentsLibraryPreview() {
+  return MaterialApp(
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData.dark(), // Imposta il tema scuro per testare i tuoi colori
+    home: Scaffold(
+      backgroundColor: Colors.black87,
+      body: Center(
+        child: ComponentsLibrary(
+          // ignore: avoid_print
+          onComponentSelected: (mode) => print("Selected: $mode"),
+          // ignore: avoid_print
+          onClose: () => print("Library closed"),
+        ),
+      ),
+    ),
+  );
 }

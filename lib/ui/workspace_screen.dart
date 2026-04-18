@@ -10,6 +10,8 @@ import 'package:circuit_spice/components/components.dart';
 import 'package:circuit_spice/ui/circuit_painter.dart';
 import 'package:circuit_spice/ui/overlays/dialogs.dart';
 import 'package:circuit_spice/ui/widgets/widgets.dart';
+import 'package:circuit_spice/ui/widgets/components_library.dart';
+
 
 class WorkspaceScreen extends StatefulWidget {
   const WorkspaceScreen({super.key});
@@ -22,6 +24,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   final CircuitManager _manager = CircuitManager();
   final TransformationController _camController = TransformationController();
   final ValueNotifier<int> _renderTrigger = ValueNotifier<int>(0);
+  bool _isLibraryOpen = false;
 
   final double _workspaceSize = 10000.0; 
 
@@ -40,6 +43,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           -(_workspaceSize / 2) + (screen.height / 2),
           0)
         );
+        setState(() {});
     });
   }
   
@@ -56,29 +60,63 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     return Scaffold(
       bottomNavigationBar: WorkspaceToolbar(
         currentMode: _controller.currentMode,
-        onModeChanged: (mode) => setState(() => _controller.setMode(mode, spawnPos: _getCanvasCenter())),
+        onModeChanged: (mode) => setState(() {
+          _controller.setMode(mode, spawnPos: _getCanvasCenter());
+          _isLibraryOpen = false;
+        }),
         onPlayPressed: () => _controller.runNetlistener(),
+        isLibraryOpen: _isLibraryOpen,
+        onToggleLibrary: () => setState(() {
+          _isLibraryOpen = !_isLibraryOpen;
+        }),
+
       ),
-      body: InteractiveViewer(
-        transformationController: _camController,
-        constrained: false,
-        boundaryMargin: const EdgeInsets.all(40.0),
-        minScale: 0.1,
-        maxScale: 10.0,
-        panEnabled: _controller.currentMode == AppMode.select ? !_controller.isCanvasLocked : false,
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            _buildCanvasLayer(),
-            _buildContextToolbar(),
-            _buildPlacementToolbar(),
-          ],
-        )
+      body: Stack(
+        children: [
+          // --- Il Canvas, mobile con lo schermo
+          SizedBox.expand(
+            child: InteractiveViewer(
+              transformationController: _camController,
+              constrained: false,
+              boundaryMargin: const EdgeInsets.all(40.0),
+              minScale: 0.1,
+              maxScale: 10.0,
+              panEnabled: _controller.currentMode == AppMode.select ? !_controller.isCanvasLocked : false,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  _buildCanvasLayer(),
+                  _buildContextToolbar(),
+                  _buildPlacementToolbar(),
+                ],
+              )
+            ),
+          ),
+          // --- UI Overlay, fisso con schermo
+          _buildComponentsLibrary(), 
+        ],
       ),
     );
   }
 
   // --- Helper di Layout ---
+  Widget _buildComponentsLibrary() {
+    if (!_isLibraryOpen) return const SizedBox.shrink();
+    return Positioned(
+      bottom: 20,
+      right: 20,
+      child: ComponentsLibrary(
+        onComponentSelected: (mode) {
+          setState(() {
+            _controller.setMode(mode, spawnPos: _getCanvasCenter());
+            _isLibraryOpen = false;
+          });
+        },
+        onClose: () => setState(() => _isLibraryOpen = false),
+      ),
+    );
+  }
+
   Widget _buildCanvasLayer() {
     return Listener(
       behavior: HitTestBehavior.opaque,
@@ -145,17 +183,6 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     _controller.onPointerUp(event, (ElectronicComponent comp) {
         _showEditForm(comp);
       });
-    //   showComponentEditor(
-    //     context: context, 
-    //     component: comp, 
-    //     onDelete: () {
-    //       _manager.components.remove(comp);
-    //       setState(() {}); // Aggiorna UI
-    //     },
-    //     onRotate: () => _manager.tryRotate(comp), 
-    //     onUpdate: () => setState(() {}),
-    //   );
-    // });
   }
 
   void _showEditForm(ElectronicComponent component) {

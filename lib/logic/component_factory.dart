@@ -13,7 +13,7 @@ class ComponentFactory {
       case AppMode.placeCurrent:
         return CurrentSource(name: 'I$id', value: 1.0);
       case AppMode.placeLabelNet:
-        return NetLabel();
+        return NetLabel(name: 'NET$id');
       default:
         return null;
     }
