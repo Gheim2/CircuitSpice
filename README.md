@@ -112,15 +112,27 @@ Il metodo `stamp()` del Resistore esegue queste operazioni sulla matrice:
 * **Autoconduttanza (Diagonale):** Aggiunge $+G$ in `A[1][1]` e `A[2][2]`.
 * **Conduttanza Mutua (Incroci):** Sottrae $-G$ in `A[1][2]` e `A[2][1]`.
 
-**Visualizzazione della Matrice $A$:**
-```text
-         | Nodo 1 | Nodo 2 | Nodo 3 | ...
----------|--------|--------|--------|----
- Nodo 1  |   +G   |   -G   |   0    | ...
- Nodo 2  |   -G   |   +G   |   0    | ...
- Nodo 3  |   0    |   0    |   0    | ...
+**Rappresentazione del Sistema Lineare ($A \cdot x = Z$):**
 
- ...
+- $`\begin{bmatrix}
+        G & -G & 0 & \dots \\
+        -G & G & 0 & \dots \\
+        0 & 0 & 0 & \dots \\
+        \vdots & \vdots & \vdots & \ddots
+        \end{bmatrix}
+        \begin{bmatrix}
+        V_1 \\
+        V_2 \\
+        V_3 \\
+        \vdots
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+        0 \\
+        0 \\
+        0 \\
+        \vdots
+        \end{bmatrix}`$
 
 ## 🗺️ Roadmap / Sviluppi Futuri
 
