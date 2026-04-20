@@ -124,5 +124,4 @@ class ComponentRenderer {
     currentText.paint(canvas, Offset(textOffsetX, textOffsetY));
   }
 
-  
 }

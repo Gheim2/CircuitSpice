@@ -1,8 +1,12 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
+import '../../ui/widgets/component_preview.dart';
 import '../base/symbol_renderer.dart';
 import 'net_label.dart';
 
-class NetLabelSymbol extends SymbolRenderer<NetLabel> {
+class NetLabelUI extends SymbolRenderer<NetLabel> {
 
   @override
   Color get baseColor => Colors.purpleAccent;
@@ -29,7 +33,22 @@ class NetLabelSymbol extends SymbolRenderer<NetLabel> {
         ),
         textDirection: TextDirection.ltr,
       )..layout();
-      tp.paint(canvas, Offset(15 + (45 - tp.width) / 2, -tp.height / 2));
+
+      final centerX = 15.0 + (45.0 / 2);
+      final centerY = 0.0;
+      canvas.save();
+      canvas.translate(centerX, centerY);
+      double absAngle = component.rotation % 360;
+      // To avoid upside-down text
+      if (absAngle > 90 && absAngle <= 270) {
+        canvas.rotate(math.pi); // Ruota di 180 gradi
+      }
+      tp.paint(canvas, Offset(-tp.width / 2, -tp.height / 2));
+      canvas.restore();
     }
   }
 }
+
+@Preview()
+Widget netLabelPreview() =>
+    ComponentPreview(component: NetLabel(name: "Net1", rotation: 0));

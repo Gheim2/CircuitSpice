@@ -5,6 +5,7 @@ enum AppMode {
   placeResistor, 
   placeVoltage, 
   placeCurrent, 
+  placeVCVS,
   drawWire, 
   placeGround, 
   placeLabelNet 

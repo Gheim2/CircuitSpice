@@ -9,3 +9,4 @@ export 'v_source/v_source.dart';
 export 'ground/ground.dart';
 export 'net_label/net_label.dart';
 export 'wire/wire.dart';
+export 'vcvs/vcvs.dart';

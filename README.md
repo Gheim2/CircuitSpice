@@ -69,16 +69,20 @@ Per aggiungere un nuovo componente elettrico, basta:
 ### Installazione
 
 1. Clona il repository:
-   > git clone https://github.com/tuo-username/circuit_spice.git
+   ```bash
+   git clone https://github.com/tuo-username/circuit_spice.git
 
 2. Entra nella directory del progetto:
-   > cd circuit_spice
+   ```bash
+   cd circuit_spice
 
 3. Scarica le dipendenze:
-   > flutter pub get
+   ```bash
+   flutter pub get
 
 4. Avvia l'applicazione:
-   > flutter run
+   ```bash
+   flutter run
 
 ---
 
@@ -107,6 +111,6 @@ I contributi sono benvenuti! Se vuoi aggiungere un nuovo componente:
 1. Crea una nuova cartella sotto `lib/components/`
 2. Implementa il Modello estendendo `ElectronicComponent` (solo logica/geometria).
 3. Implementa il Renderer estendendo `SymbolRenderer` (solo grafica/path).
-4. Registra il componente nel `ComponentRenderer`.
+4. Registra il componente aggiungendo il suo manifesto nel `globalComponentRegistry` (`lib/config/component_registry.dart`).
 
 ---

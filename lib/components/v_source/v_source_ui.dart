@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../base/symbol_renderer.dart';
 import 'v_source.dart';
 
-class VSourceSymbol extends SymbolRenderer<VoltageSource> {
+class VSourceUI extends SymbolRenderer<VoltageSource> {
   @override
   void drawSymbol(Canvas canvas, Size size, Paint paint) {
     final path = Path()

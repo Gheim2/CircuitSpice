@@ -10,3 +10,4 @@ abstract class SymbolRenderer<T extends ElectronicComponent> {
   // (Opzionale) Se il componente ha logiche di disegno extra al suo interno
   void drawInnerSymbol(Canvas canvas, Paint paint, T component) {}
 }
+

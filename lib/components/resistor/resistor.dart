@@ -13,6 +13,7 @@ class Resistor extends ElectronicComponent {
 
   @override
   String get prefix => 'R';
+  
   @override
   String get unit => 'Ω';
 

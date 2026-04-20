@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'current_source.dart';
 import '../base/symbol_renderer.dart';
 
-class CurrentSourceSymbol extends SymbolRenderer<CurrentSource> {
+class CurrentSourceUI extends SymbolRenderer<CurrentSource> {
   
   @override
   void drawSymbol(Canvas canvas, Size size, Paint paint) {
