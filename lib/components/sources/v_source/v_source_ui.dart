@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../base/symbol_renderer.dart';
+import '../../base/symbol_renderer.dart';
 import 'v_source.dart';
 
 class VSourceUI extends SymbolRenderer<VoltageSource> {

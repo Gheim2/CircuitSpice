@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../logic/mna_context.dart';
-import '../base/electronic_component.dart';
-import '../base/node.dart';
+import '../../../logic/mna_context.dart';
+import '../../base/electronic_component.dart';
+import '../../base/node.dart';
 
 class VCVS extends ElectronicComponent {
-  VCVS({super.position = Offset.zero, super.value = 0.0, super.name = '', super.rotation});
+  VCVS({super.position = Offset.zero, super.value = 1.0, super.name = '', super.rotation});
 
   int _mnaRow = -1; // Per tenere traccia della riga ausiliaria in MNA
 

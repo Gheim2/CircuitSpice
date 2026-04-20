@@ -66,5 +66,12 @@ final List<ComponentManifest> globalComponentRegistry = [
     label: 'VCVS',
     builder: (id) => VCVS(name: 'Vc$id'),
     renderer: VCVSUI(),
-  )
+  ),
+  ComponentManifest(
+    modelType: VCCS,
+    mode: AppMode.placeVCCS,
+    label: 'VCCS',
+    builder: (id) => VCCS(name: 'Ic$id'),
+    renderer: VCCSUI(),
+  ),
 ];

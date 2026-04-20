@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../logic/mna_context.dart';
-import '../base/electronic_component.dart';
-import '../base/node.dart';
+import '../../../logic/mna_context.dart';
+import '../../base/electronic_component.dart';
+import '../../base/node.dart';
 
 class VoltageSource extends ElectronicComponent {
   VoltageSource({super.position = Offset.zero, super.value = 0.0, super.name = '', super.rotation});
