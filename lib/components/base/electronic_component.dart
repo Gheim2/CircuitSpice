@@ -1,10 +1,10 @@
 import 'dart:math' as math;
-
-// import 'package:flutter/material.dart';
 import 'dart:ui';
+
 import 'node.dart';
 import '../../config/app_config.dart';
 import '../../logic/engineering_utils.dart';
+import '../../logic/mna_context.dart';
 
 enum LabelPosition { top, right, bottom, left }
 
@@ -41,6 +41,12 @@ abstract class ElectronicComponent {
   bool get isValueEditable => true;
   double get currentArrowOffsetY => 25.0;
   String get formattedValue => '${EngineeringUtils.formatValue(value)}$unit';
+  // MNA
+  int get auxiliaryEquations => 0; // Quante equazioni ausiliarie servono per questo componente
+  // Stampa conduttande o equazioni KVL/KCL nella matrice
+  void stamp(MNAContext ctx) {}
+  // Calcola la corrente nel componente dopo la risoluzione
+  double calculateCurrent(MNAContext ctx, Map<int, double> nodeVoltages, List<double> x) => 0.0;
 
   ElectronicComponent clone(Offset newPosition);
 
@@ -125,6 +131,6 @@ abstract class ElectronicComponent {
     }
   }
 
-  // void drawInnerSymbol(Canvas canvas, Paint paint) {}
+  
 
 }

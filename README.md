@@ -94,6 +94,34 @@ Per aggiungere un nuovo componente elettrico, basta:
 
 ---
 
+## 🧮 Motore Matematico MNA e Pattern "Stamping"
+
+Il cuore matematico del simulatore risolve il circuito utilizzando la **Modified Nodal Analysis (MNA)**. 
+Per garantire una scalabilità perfetta, il `CircuitEngine` non contiene alcuna logica specifica per i componenti. 
+
+Il simulatore utilizza invece un'architettura decentralizzata basata sul **Pattern Stamping**:
+1. Il `CircuitEngine` istanzia una matrice vuota attraverso un `MNAContext`.
+2. Ogni `ElectronicComponent` implementa un metodo polimorfico `stamp(MNAContext ctx)`.
+3. Il componente ha l'esclusiva responsabilità di inserire i propri coefficienti nella matrice di sistema $A$ e nel vettore dei termini noti $Z$.
+
+### Esempio Pratico: Lo "Stamp" del Resistore
+Prendiamo come esempio un Resistore collegato tra il **Nodo 1** e il **Nodo 2**. 
+La sua conduttanza è $G = \frac{1}{R}$.
+
+Il metodo `stamp()` del Resistore esegue queste operazioni sulla matrice:
+* **Autoconduttanza (Diagonale):** Aggiunge $+G$ in `A[1][1]` e `A[2][2]`.
+* **Conduttanza Mutua (Incroci):** Sottrae $-G$ in `A[1][2]` e `A[2][1]`.
+
+**Visualizzazione della Matrice $A$:**
+```text
+         | Nodo 1 | Nodo 2 | Nodo 3 | ...
+---------|--------|--------|--------|----
+ Nodo 1  |   +G   |   -G   |   0    | ...
+ Nodo 2  |   -G   |   +G   |   0    | ...
+ Nodo 3  |   0    |   0    |   0    | ...
+
+ ...
+
 ## 🗺️ Roadmap / Sviluppi Futuri
 
 - [x] Motore di rendering base e pan/zoom

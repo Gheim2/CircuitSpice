@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app_mode.dart';
 import '../components/components.dart';
-// import '../ui/renderers/component_renderer.dart';
 
 class ComponentManifest {
   final Type modelType;                      // Il tipo di classe
@@ -57,7 +56,7 @@ final List<ComponentManifest> globalComponentRegistry = [
     modelType: NetLabel,
     mode: AppMode.placeLabelNet,
     label: 'Net Label',
-    builder: (id) => NetLabel(name: 'Net$id'),
+    builder: (id) => NetLabel(name: 'NET$id'),
     renderer: NetLabelUI(),
     iconOffset: const Offset(-30, 0),
   ),
