@@ -20,7 +20,7 @@
 Il progetto segue rigidi principi di *Separation of Concerns* (SoC), separando i dati logico-matematici dal rendering visivo (UI). 
 
 La struttura principale (Vertical Slicing) è così divisa:
-
+```text
    lib/
    │   main.dart
    │
@@ -50,7 +50,7 @@ La struttura principale (Vertical Slicing) è così divisa:
    ├───logic/                    # Core engine: CircuitManager, InteractionController, Math/MNA
    │
    └───ui/                       # Interfaccia utente: Viewers, Toolbars, Renderer Manager
-
+```
 ---
 
 Il simulatore è costruito per essere estremamente scalabile. L'aggiunta di nuovi componenti è governata da un **Registro Centrale** (`ComponentManifest`), eliminando la necessità di modificare decine di file.
