@@ -147,20 +147,23 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     return Positioned(
       left: _controller.selectedComponent!.position.dx - 80,
       top: _controller.selectedComponent!.position.dy - 65,
-      child: ContextToolbar(
-        onEdit: () => _showEditForm(_controller.selectedComponent!),
-        onCopy: () {
-          _controller.copySelected();
-          setState(() {}); // Aggiorniamo l'interfaccia dopo l'azione
-        },
-        onRotate: () {
-          _controller.rotateSelected();
-          setState(() {});
-        },
-        onDelete: () {
-          _controller.deleteSelected();
-          setState(() {});
-        },
+      child: FractionalTranslation(
+        translation: const Offset(0.125, 0.0),
+        child: ContextToolbar(
+          onEdit: () => _showEditForm(_controller.selectedComponent!),
+          onCopy: () {
+            _controller.copySelected();
+            setState(() {}); // Aggiorniamo l'interfaccia dopo l'azione
+          },
+          onRotate: () {
+            _controller.rotateSelected();
+            setState(() {});
+          },
+          onDelete: () {
+            _controller.deleteSelected();
+            setState(() {});
+          },
+        ),
       ),
     );
   }
@@ -171,10 +174,13 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
       left: _controller.previewComponent!.position.dx - 65,
       top: _controller.previewComponent!.position.dy - 80,
       child: SafeArea(
-        child: PlacementToolbar(
-          onConfirm: _controller.confirmPlacement,
-          onCancel: _controller.cancelPlacement,
-          onRotate: _controller.rotatePreview,
+        child: FractionalTranslation(
+          translation: const Offset(0.16, 0.0),
+          child: PlacementToolbar(
+            onConfirm: _controller.confirmPlacement,
+            onCancel: _controller.cancelPlacement,
+            onRotate: _controller.rotatePreview,
+          ),
         ),
       ),
     );

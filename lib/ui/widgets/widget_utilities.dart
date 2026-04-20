@@ -26,9 +26,15 @@ Widget buildModeBtn(
 
 Widget buildBtn(IconData icon, VoidCallback callback, String tooltip, {Color baseColor = Colors.white, Color activeColor = Colors.orangeAccent, bool isActive = false}) {
   return IconButton(
-    icon: Icon(icon, color: isActive ? activeColor : baseColor),
+    icon: Icon(icon, color: isActive ? activeColor : baseColor, size: 20),
     tooltip: tooltip,
     onPressed: callback,
+    // iconSize: 20,
+    padding: const EdgeInsets.all(4), // Riduci il padding interno
+    constraints: const BoxConstraints(
+      minWidth: 30,  // Forza la larghezza minima a 30 (invece di 48)
+      minHeight: 30, // Forza l'altezza minima a 30 (invece di 48)
+    ),
   );
 }
 

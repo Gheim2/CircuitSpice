@@ -20,7 +20,7 @@ class ContextToolbar extends StatelessWidget {
     return Material(
       elevation: 8,
       borderRadius: BorderRadius.circular(30),
-      color: Colors.grey[850],
+      color: Colors.grey[850]!.withAlpha(100),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
         child: Row(
