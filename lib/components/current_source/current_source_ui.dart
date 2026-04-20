@@ -19,6 +19,6 @@ class CurrentSourceUI extends SymbolRenderer<CurrentSource> {
   }
 
   @override
-  void drawInnerSymbol(Canvas canvas, Paint paint, CurrentSource component) {
+  void drawInnerSymbol(Canvas canvas, Paint paint, CurrentSource? component) {
   }
 }

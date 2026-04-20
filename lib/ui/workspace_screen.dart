@@ -1,3 +1,4 @@
+import 'package:circuit_spice/config/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 // Import dei blocchi logici
@@ -26,7 +27,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   final ValueNotifier<int> _renderTrigger = ValueNotifier<int>(0);
   bool _isLibraryOpen = false;
 
-  final double _workspaceSize = 10000.0; 
+  final double _workspaceSize = AppConfig.gridDimension;
 
   @override
   void initState() {

@@ -3,12 +3,12 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'circuit_engine.dart';
 import '../components/core.dart';
+import '../config/app_config.dart';
 
 class CircuitManager {
   final List<ElectronicComponent> components = [];
   final List<Wire> wires = [];
   CircuitEngine? engine;
-  static const double gridSize = 40.0;
 
   // ============================================================================
   // 1. GESTIONE COMPONENTI E FILI
@@ -58,6 +58,7 @@ class CircuitManager {
   // 2. LOGICA DI POSIZIONAMENTO (SNAP E COLLISIONI)
   // ============================================================================
   void _applySnap(ElectronicComponent comp) {
+    final gridSize = AppConfig.gridSpacing;
     comp.position = Offset(
       (comp.position.dx / gridSize).round() * gridSize,
       (comp.position.dy / gridSize).round() * gridSize,
@@ -73,6 +74,7 @@ class CircuitManager {
         }
       }
     }
+    final gridSize = AppConfig.gridSpacing;
     // Altrimenti, ci snappiamo normalmente all'incrocio della griglia
     return Offset(
       (rawPos.dx / gridSize).round() * gridSize,

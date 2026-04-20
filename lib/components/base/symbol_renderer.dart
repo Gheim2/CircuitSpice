@@ -8,6 +8,6 @@ abstract class SymbolRenderer<T extends ElectronicComponent> {
   void drawSymbol(Canvas canvas, Size size, Paint paint);
   
   // (Opzionale) Se il componente ha logiche di disegno extra al suo interno
-  void drawInnerSymbol(Canvas canvas, Paint paint, T component) {}
+  void drawInnerSymbol(Canvas canvas, Paint paint, T? component) {}
 }
 

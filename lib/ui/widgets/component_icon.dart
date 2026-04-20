@@ -61,6 +61,7 @@ class _IconPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     renderer.drawSymbol(canvas, size, paint);
+    renderer.drawInnerSymbol(canvas, paint, null); // Passiamo null perché non abbiamo un componente specifico qui
     canvas.restore();
     // component.drawSymbol(canvas, paint);
   }

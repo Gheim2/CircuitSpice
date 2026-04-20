@@ -14,11 +14,6 @@ class Ground extends ElectronicComponent {
   }
 
   @override
-  List<Offset> get relativeForbiddenPoints => [
-    const Offset(0,20),
-  ];
-
-  @override
   List<ComponentNode> get nodes => [
     ComponentNode(const Offset(0, 0))
   ];

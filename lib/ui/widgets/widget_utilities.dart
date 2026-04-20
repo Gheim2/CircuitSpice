@@ -1,9 +1,7 @@
 import 'package:circuit_spice/config/app_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-// import 'package:circuit_spice/components/core.dart';
 import 'component_icon.dart';
-// Da importare per disegnare le toolbar
 
 Widget buildModeBtn(
     AppMode mode, 

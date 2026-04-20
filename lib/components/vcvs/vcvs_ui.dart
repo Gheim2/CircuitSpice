@@ -10,9 +10,9 @@ class VCVSUI extends SymbolRenderer<VCVS> {
     final rect = Rect.fromCenter(center: Offset.zero, width: 40, height: 40);
     final path = Path()
       ..moveTo(-40, -20)
-      ..lineTo(0, -20) // +c terminal
+      ..lineTo(-20, -20)..lineTo(-10, -10) // +c terminal
       ..moveTo(-40, 20)
-      ..lineTo(0, 20) // -c terminal
+      ..lineTo(-20, 20)..lineTo(-10, 10) // -c terminal
       ..moveTo(0, -40)
       ..lineTo(0, -20) // + terminal |
       ..moveTo(0, 40)
@@ -27,7 +27,7 @@ class VCVSUI extends SymbolRenderer<VCVS> {
   }
 
   @override
-  void drawInnerSymbol(Canvas canvas, Paint paint, VCVS component) {
+  void drawInnerSymbol(Canvas canvas, Paint paint, VCVS? component) {
     final path = Path()
       ..moveTo(-5, -8)
       ..lineTo(5, -8) // +

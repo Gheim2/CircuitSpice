@@ -28,9 +28,6 @@ class NetLabel extends ElectronicComponent{
   List<ComponentNode> get nodes => [ComponentNode(Offset.zero)];
 
   @override
-  List<Offset> get relativeForbiddenPoints => [Offset(40, 0)];
-
-  @override
   Rect get baseCollisionRect => Rect.fromLTRB(3, -12, 62, 12);
 
 }

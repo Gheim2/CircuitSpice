@@ -3,6 +3,7 @@ import 'dart:math' as math;
 // import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'node.dart';
+import '../../config/app_config.dart';
 import '../../logic/engineering_utils.dart';
 
 enum LabelPosition { top, right, bottom, left }
@@ -50,7 +51,41 @@ abstract class ElectronicComponent {
   List<Offset> get globalNodePositions => 
       nodes.map((n) => n.getGlobalPosition(position, rotation)).toList();
 
-  List<Offset> get relativeForbiddenPoints => [Offset.zero];
+  List<Offset> get relativeForbiddenPoints {
+    final List<Offset> forbidden = [];
+    final rect = baseCollisionRect;
+    final spacing = AppConfig.gridSpacing;
+
+    // 1. Troviamo i multipli della griglia minimi e massimi che coprono l'hitbox
+    int minX = (rect.left / spacing).floor();
+    int maxX = (rect.right / spacing).ceil();
+    int minY = (rect.top / spacing).floor();
+    int maxY = (rect.bottom / spacing).ceil();
+
+    // 2. Estraiamo le coordinate dei pin (nodi) per escluderli dal divieto
+    final validNodeOffsets = nodes.map((n) => n.relativePosition).toList();
+
+    // 3. Scansioniamo l'area
+    for (int x = minX; x <= maxX; x++) {
+      for (int y = minY; y <= maxY; y++) {
+        // Calcoliamo il punto potenziale della griglia
+        final point = Offset(x * spacing, y * spacing);
+
+        // Se il punto cade fisicamente dentro (o sul bordo) dell'hitbox...
+        if (point.dx >= rect.left && point.dx <= rect.right &&
+            point.dy >= rect.top && point.dy <= rect.bottom) {
+          
+          // ...e NON è un nodo valido su cui posso collegare un filo...
+          if (!validNodeOffsets.contains(point)) {
+            // ...allora è un punto in cui i fili non possono passare!
+            forbidden.add(point);
+          }
+        }
+      }
+    }
+    
+    return forbidden;
+  }
 
   List<Offset> get globalForbiddenPoints =>
     relativeForbiddenPoints.map((p) => getGlobalPosition(p)).toList();

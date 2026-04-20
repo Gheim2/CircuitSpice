@@ -13,7 +13,7 @@ class ResistorUI extends SymbolRenderer<Resistor> {
   }
 
   @override
-  void drawInnerSymbol(Canvas canvas, Paint paint, Resistor component) {
+  void drawInnerSymbol(Canvas canvas, Paint paint, Resistor? component) {
     // Lascia vuoto se non serve, o aggiungi dettagli specifici
   }
 }

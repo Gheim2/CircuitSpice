@@ -14,7 +14,7 @@ class GroundUI extends SymbolRenderer<Ground> {
   }
 
   @override
-  void drawInnerSymbol(Canvas canvas, Paint paint, Ground component) {
+  void drawInnerSymbol(Canvas canvas, Paint paint, Ground? component) {
     // Lascia vuoto se non serve, o aggiungi dettagli specifici
   }
 }

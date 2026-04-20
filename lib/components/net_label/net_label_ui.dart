@@ -22,7 +22,8 @@ class NetLabelUI extends SymbolRenderer<NetLabel> {
   }
 
   @override
-  void drawInnerSymbol(Canvas canvas, Paint paint, NetLabel component) {
+  void drawInnerSymbol(Canvas canvas, Paint paint, NetLabel? component) {
+    if (component == null) return;
     // Disegna il nome dentro il componente
     if (component.name.isNotEmpty) {
       Color textColor = paint.color == Colors.white ? Colors.black : Colors.white;

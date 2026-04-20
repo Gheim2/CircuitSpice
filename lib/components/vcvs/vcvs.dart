@@ -16,11 +16,6 @@ class VCVS extends ElectronicComponent {
   }
 
   @override
-  List<Offset> get relativeForbiddenPoints => [
-    const Offset(0,0),
-  ];
-
-  @override
   LabelPosition get defaultLabelPosition => LabelPosition.right;
 
   @override

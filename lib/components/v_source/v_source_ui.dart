@@ -16,7 +16,7 @@ class VSourceUI extends SymbolRenderer<VoltageSource> {
   }
 
   @override
-  void drawInnerSymbol(Canvas canvas, Paint paint, VoltageSource component) {
+  void drawInnerSymbol(Canvas canvas, Paint paint, VoltageSource? component) {
     // Lascia vuoto se non serve, o aggiungi dettagli specifici
   }
 }

@@ -33,11 +33,6 @@ class CurrentSource extends ElectronicComponent {
   ];
 
   @override
-  List<Offset> get relativeForbiddenPoints => [
-    const Offset(0,0),
-  ];
-
-  @override
   Rect get baseCollisionRect => Rect.fromCenter(center: Offset.zero, width: 40, height: 40);
 
 }

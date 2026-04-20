@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:circuit_spice/ui/renderers/grid_renderer.dart';
 import 'renderers/component_renderer.dart';
 import 'package:circuit_spice/components/components.dart';
+import 'package:circuit_spice/config/app_config.dart';
 
 class CircuitPainter extends CustomPainter {
   final List<ElectronicComponent> components;
@@ -48,8 +49,7 @@ class CircuitPainter extends CustomPainter {
   }
   
   void _drawGrid(Canvas canvas, Size size) {
-    const double spacing = 40.0;
-    GridRenderer.draw(canvas, size, spacing, color: Colors.grey.withValues(alpha: 0.2));
+    GridRenderer.draw(canvas, size, AppConfig.gridSpacing, color: Colors.grey.withValues(alpha: 0.2));
   }
 
   void _drawWires(Canvas canvas, Set<int> drawnLabelNets) {
