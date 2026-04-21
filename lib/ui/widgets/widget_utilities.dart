@@ -4,50 +4,60 @@ import 'package:flutter_svg/svg.dart';
 import 'component_icon.dart';
 
 Widget buildModeBtn(
-    AppMode mode, 
-    VoidCallback callback, String tooltip, 
-    {Color activeColor = Colors.orangeAccent,
-    double customScale = 1.0,
-    Offset iconOffset = Offset.zero,
-    bool isActive = false,
-    }) 
-  {
-  return IconButton(
-    icon: ComponentIcon(
-      mode: mode, 
+  AppMode mode,
+  VoidCallback callback,
+  String tooltip, {
+  Color activeColor = Colors.orangeAccent,
+  double customScale = 1.0,
+  Offset iconOffset = Offset.zero,
+  bool isActive = false,
+}) {
+  return _buildUnifiedButtonBox(
+    child: ComponentIcon(
+      mode: mode,
       color: isActive ? activeColor : Colors.white,
       customScale: customScale,
       iconOffset: iconOffset,
-    ),
-    tooltip: tooltip,
-    onPressed: callback,
+    ), 
+    onTap: callback, 
+    tooltip: tooltip
   );
 }
 
-Widget buildBtn(IconData icon, VoidCallback callback, String tooltip, {Color baseColor = Colors.white, Color activeColor = Colors.orangeAccent, bool isActive = false}) {
-  return IconButton(
-    icon: Icon(icon, color: isActive ? activeColor : baseColor, size: 20),
-    tooltip: tooltip,
-    onPressed: callback,
-    // iconSize: 20,
-    padding: const EdgeInsets.all(4), // Riduci il padding interno
-    constraints: const BoxConstraints(
-      minWidth: 30,  // Forza la larghezza minima a 30 (invece di 48)
-      minHeight: 30, // Forza l'altezza minima a 30 (invece di 48)
-    ),
-  );
+Widget buildBtn(
+  IconData icon,
+  VoidCallback callback,
+  String tooltip, {
+  Color baseColor = Colors.white,
+  Color activeColor = Colors.orangeAccent,
+  bool isActive = false,
+}) {
+  return _buildUnifiedButtonBox(
+    child: Icon(
+      icon,
+      color: isActive ? activeColor : baseColor,
+      size: 24,
+    ), 
+    onTap: callback, 
+    tooltip: tooltip
+    );
 }
 
-
-Widget buildSvgBtn(String assetPath, VoidCallback callback, String tooltip, {Color activeColor = Colors.orangeAccent, bool isActive = false}) {
+Widget buildSvgBtn(
+  String assetPath,
+  VoidCallback callback,
+  String tooltip, {
+  Color activeColor = Colors.orangeAccent,
+  bool isActive = false,
+}) {
   return IconButton(
     icon: SvgPicture.asset(
-      assetPath, 
-      width: 24, 
-      height: 24, 
+      assetPath,
+      width: 24,
+      height: 24,
       colorFilter: ColorFilter.mode(
-        isActive ? activeColor : Colors.white, 
-        BlendMode.srcIn
+        isActive ? activeColor : Colors.white,
+        BlendMode.srcIn,
       ),
     ),
     tooltip: tooltip,
@@ -57,9 +67,35 @@ Widget buildSvgBtn(String assetPath, VoidCallback callback, String tooltip, {Col
 
 Widget separator() {
   return Container(
-    width: 1, 
-    height: 30, 
+    width: 1,
+    height: 30,
     color: Colors.white24, // Separatore visivo opzionale
     margin: const EdgeInsets.symmetric(horizontal: 4),
+  );
+}
+
+Widget _buildUnifiedButtonBox({
+  required Widget child,
+  required VoidCallback onTap,
+  required String tooltip,
+}) {
+  return Tooltip(
+    message: tooltip,
+    child: SizedBox(
+      width: 48,
+      height: 48,
+      child: Material(
+        color: Colors.transparent,
+        shape: const CircleBorder(), // Forza la bolla a essere un cerchio perfetto
+        clipBehavior: Clip.hardEdge, // Taglia qualsiasi sbavatura visiva
+        child: InkWell(
+          onTap: onTap,
+          // L'InkWell riempirà esattamente i 48x48 pixel circolari
+          child: Center(
+            child: child, // L'icona viene centrata perfettamente
+          ),
+        ),
+      ),
+    ),
   );
 }

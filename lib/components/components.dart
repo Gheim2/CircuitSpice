@@ -11,3 +11,4 @@ export 'sources/current_source/current_source_ui.dart';
 export 'sources/v_source/v_source_ui.dart';
 export 'sources/vcvs/vcvs_ui.dart';
 export 'sources/vccs/vccs_ui.dart';
+export 'sensors/current_sensor/current_sensor_ui.dart';

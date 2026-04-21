@@ -1,0 +1,42 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Create new component",
+            "type": "shell",
+            "command": "dart run tools/create_component.dart ${input:className} ${input:fileName} ${input:category}",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "category",
+            "type": "pickString",
+            "description": "In which folder should the component be created?",
+            "options": [
+                "sources",
+                "sensors",
+                "passives",
+                "actives",
+                "core_components"
+            ],
+            "default": "passives"
+        },
+        {
+            "id": "className",
+            "type": "promptString",
+            "description": "Name of the class (e.g. CurrentSensor)",
+            "default": "NewComponent"
+        },
+        {
+            "id": "fileName",
+            "type": "promptString",
+            "description": "Name of the file (e.g. current_sensor)",
+            "default": "new_component"
+        }
+    ]
+}

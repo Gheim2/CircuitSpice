@@ -9,5 +9,6 @@ enum AppMode {
   placeVCCS,
   drawWire, 
   placeGround, 
-  placeLabelNet 
+  placeLabelNet ,
+  placeCurrentSensor,
 }

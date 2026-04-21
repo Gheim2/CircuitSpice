@@ -148,7 +148,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
       left: _controller.selectedComponent!.position.dx - 80,
       top: _controller.selectedComponent!.position.dy - 65,
       child: FractionalTranslation(
-        translation: const Offset(0.125, 0.0),
+        translation: const Offset(-0.125, 0.0),
         child: ContextToolbar(
           onEdit: () => _showEditForm(_controller.selectedComponent!),
           onCopy: () {
@@ -175,7 +175,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
       top: _controller.previewComponent!.position.dy - 80,
       child: SafeArea(
         child: FractionalTranslation(
-          translation: const Offset(0.16, 0.0),
+          translation: const Offset(-0.075, 0.0),
           child: PlacementToolbar(
             onConfirm: _controller.confirmPlacement,
             onCancel: _controller.cancelPlacement,

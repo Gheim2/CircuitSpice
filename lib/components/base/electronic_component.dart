@@ -123,11 +123,15 @@ abstract class ElectronicComponent {
   }
 
   Offset _getDefaultLabelsOffset() {
+    final double top = baseCollisionRect.topCenter.dy;
+    final double bottom = baseCollisionRect.bottomCenter.dy;
+    final double right = baseCollisionRect.centerRight.dx;
+    final double left = baseCollisionRect.centerLeft.dx;
     switch (defaultLabelPosition) {
-      case LabelPosition.top: return const Offset(0, -35);
-      case LabelPosition.right: return const Offset(40, 0);
-      case LabelPosition.bottom: return const Offset(0, 35);
-      case LabelPosition.left: return const Offset(-40, 0);
+      case LabelPosition.top: return Offset(0, top - 20);
+      case LabelPosition.right: return Offset(right + 20, 0);
+      case LabelPosition.bottom: return Offset(0, bottom + 20);
+      case LabelPosition.left: return Offset(left - 20, 0);
     }
   }
 

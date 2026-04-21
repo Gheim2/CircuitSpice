@@ -1,3 +1,4 @@
+import 'package:circuit_spice/components/sensors/current_sensor/current_sensor.dart';
 import 'package:flutter/material.dart';
 import 'app_mode.dart';
 import '../components/components.dart';
@@ -73,5 +74,12 @@ final List<ComponentManifest> globalComponentRegistry = [
     label: 'VCCS',
     builder: (id) => VCCS(name: 'Ic$id'),
     renderer: VCCSUI(),
+  ),
+  ComponentManifest(
+    modelType: CurrentSensor,
+    mode: AppMode.placeCurrentSensor,
+    label: 'Current Sensor',
+    builder: (id) => CurrentSensor(name: 'AMP$id'),
+    renderer: CurrentSensorUI(),
   ),
 ];

@@ -97,11 +97,14 @@ class ComponentRenderer {
     final currentPaint = Paint()
       ..color = Colors.yellowAccent
       ..style = PaintingStyle.stroke
+      ..strokeJoin = StrokeJoin.round
+      ..strokeCap = StrokeCap.round
       ..strokeWidth = 1.5;
     double cy = comp.currentArrowOffsetY;
-    canvas.drawLine(Offset(-15, cy), Offset(15, cy), currentPaint); // Linea base
-    canvas.drawLine(Offset(10, cy - 5), Offset(15, cy), currentPaint);  // Punta
-    canvas.drawLine(Offset(10, cy + 5), Offset(15, cy), currentPaint);  // Punta
+    final path = Path()
+      ..moveTo(-15, cy)..lineTo(15, cy)
+      ..moveTo(10, cy - 5)..lineTo(15, cy)..lineTo(10, cy + 5);
+    canvas.drawPath(path, currentPaint);
     canvas.restore();
 
     final currentText = TextPainter(
